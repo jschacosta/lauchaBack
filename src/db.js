@@ -1,10 +1,8 @@
 import mongoose from "mongoose";
 
 
-const dbConfig = {
-    dev: `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}`,
-  };
-mongoose.connect(dbConfig.dev, {
+const uri = 'mongodb+srv://coloro:Pepekika@pollagol.5pmli.mongodb.net/barberApi?retryWrites=true&w=majority'
+mongoose.connect(uri, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     // useFindAndModify: false,

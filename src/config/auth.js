@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 
 import envar from "./envar.js";
 import User from "../models/user.js";
-import { createError } from "../lib/error.js";
+import { createError } from "./error.js";
 
 // funcs to decoded, encoded and generate accessToken
 const decodeFunc = (token) => {
@@ -62,9 +62,9 @@ export const isAuthOptional = async (req, res, next) => {
 
       let authUser = await User.findOne({ _id: decoded._id })
         .select(
-          "isActive webpush security.hasPassword security.isRandom isActive name username idNumber phones emails scope address imgUrl currency google.name google.email google.imgUrl contacts mutedUsers sections otherAccounts"
+          "isActive name username emails imgUrl "
         )
-        .populate("scope.id", "name id _id")
+        // .populate("scope.id", "name id _id")
         .exec();
 
       authUser.id = authUser._id.toString();
@@ -86,28 +86,32 @@ export const isAuthOptional = async (req, res, next) => {
   }
 };
 
+
+
 export const isAuth = async (req, res, next) => {
+  console.log("validate auth")
+  console.log(req.headers.authorization)
   req.access_token = req.headers.authorization;
+  console.log(req.access_token)
   if (typeof req.access_token !== "undefined" && req.access_token !== "") {
     let decoded = decodeFunc(req.access_token);
-
     let authUser;
     try {
+      console.log("vamos bien")
+      console.log(decoded)
       authUser = await User.findOne({ _id: decoded._id })
-        .select(
-          "isActive webpush security.hasPassword security.isRandom isActive name username idNumber phones emails scope address imgUrl currency google.name google.email google.imgUrl contacts mutedUsers sections otherAccounts"
-        )
-        .populate([
-          {
-            path: "scope.id",
-            select: "name id _id",
-          },
-          {
-            path: "sections",
-          },
-        ])
+        .select("isActive isActive name username email imgUrl")
+        // .populate([
+        //   {
+        //     path: "scope.id",
+        //     select: "name id _id",
+        //   },
+        //   {
+        //     path: "sections",
+        //   },
+        // ])
         .exec();
-
+      console.log(authUser)
       authUser.id = authUser._id.toString();
       req.user = authUser;
       next();

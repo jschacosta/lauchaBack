@@ -1,7 +1,7 @@
 
 import User from "../models/user.js";
 import mongoose from "mongoose";
-import { notFoundError, createError, missingData } from "../lib/error.js";
+import { notFoundError, createError, missingData } from "../config/error.js";
 import {
   getTokenByRefresh,
   refreshTokenGen,

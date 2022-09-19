@@ -5,7 +5,7 @@ import {
 import  validateParams  from "../middleware/validate.js";
 
 const router = Router();
-router.post("/hola", create);
+router.post("/", create);
 
 
 export default router;

@@ -2,7 +2,6 @@
 import checkObjectId from "../lib/db/checkObjectId.js";
 
 const validateParams = function(requestParams, toValidate) {
-  console.log("entrando")
   return function(req, res, next) {
     for (let param of requestParams) {
       if (checkParamPresent(Object.keys(req[toValidate]), param)) {

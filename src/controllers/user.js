@@ -65,75 +65,39 @@ export const registerEmail = async (req, res, next) => {
       next(err);
     }
 };
-
 export const loginEmail = async (req, res, next) => {
   console.log('============= LOGIN USER BY EMAIL AND REFRESH TOKEN   =============')
-  let query = {
-    $or: [
-      {
-        username: req.body.username,
-      },
-      {
-        "email": req.body.username,
-      },
-    ],
-    type: req.body.type,
-  };
-  User.findOne(query)
-    .select(USER_DATA_SELECT)
-    .populate("scope.id")
-    .populate("currency")
-    .populate("sections")
+    const { email, password} = req.body;
+    User.findOne({email})
+    .select(
+      "name _id email isActive"
+    )
+    // .populate("users")
     .exec(async (err, user) => {
-      // if there are any errors, return the error before anything else
       if (err) return next(err);
-
-      // if no user is found, return the message
-       if (!user) next(notFoundError());
-      // const isValid =
-      //   typeof req.body.password !== "undefined"
-      //     ? await User.validPassword(user._id.toString(), req.body.password)
-      //     : false;
-      delete user.password;
-      // if (!isValid) next(createError(403, req.lg.user.wrongPassword));
-      if (!user.isActive) next(createError(401, req.lg.user.notActive));
-
+      if (!user) return next(notFoundError());
+      const isValid =
+      typeof password !== "undefined"
+      ? await User.validPassword(user._id.toString(), password)
+      : false;
+      if (!isValid) return next(createError(403, "wrong password"));
       user.lastLogin = Date.now();
-      user.typeLastLogin="EMAIL";
-      if (
-        user.activeScope == "" ||
-        !user.activeScope ||
-        user.activeScope == null
-      ) {
-        user.activeScope = user._id;
-      }
-
-      user.save(async (err) => {
+      user.save(async (err,user) => {
         if (err) next(err);
-        let relations = await Relation.countDocuments({
-          $or: [{ petitioner: user._id }, { receptor: user._id }],
-          isActive: true,
-        }).exec();
-
-        req.user = user;
-        req.user.id = req.user._id.toString() || null;
-        res.statusMessage = req.lg.user.successLogin;
         delete user.password;
-        user = user.toJSON();
-        user.relations = relations;
-
         // USER (TO CREATE TOKEN)
-
         let userToCreateToken = {
           _id: user._id,
           username: user.username,
         };
         console.log(user);
-        res.json({
+        res.status(200).json({
+          msg:"login success",
           access_token: accessTokenGen(userToCreateToken, true),
           refresh_token: refreshTokenGen(userToCreateToken),
-          user,
-        });
+          user
+        })
       });
-    });
+      
+    });  
 };

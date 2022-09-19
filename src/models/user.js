@@ -41,6 +41,17 @@ const userSchema = new Schema(
       type: String,
       unique: true,
     },
+    imgUrl: String,
+    coverImg: {
+      type: String,
+      default: "",
+    },
+    lastLogin: Date,
+    type: {
+      type: String,
+      default: "personal",
+      enum: ["personal", "business"],
+    },
   },
   { timestamps: true }
 );
@@ -62,4 +73,15 @@ export default User;
 
 User.hash = (password) => {
   return bcrypt.hashSync(password, salt, null);
+};
+User.validPassword = async (id, password) => {
+  const user = await User.findById(id, "password").exec();
+  let valid = false;
+  try {
+    valid = bcrypt.compareSync(password, user.password);
+  } catch (err) {
+    valid = false;
+  }
+
+  return valid;
 };

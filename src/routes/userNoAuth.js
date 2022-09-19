@@ -1,7 +1,8 @@
 import  Router  from "express";
 import {
     test, 
-    registerEmail
+    registerEmail,
+    loginEmail
 } from "../controllers/user.js";
 import  validateParams  from "../middleware/validate.js";
 
@@ -30,6 +31,26 @@ router.post(
         ],
     "body"
     ),
-    registerEmail)
+    registerEmail
+)
+router.post(
+    "/loginEmail",
+    validateParams(
+        [ 
+          {
+            param_key: "email",
+            required: true,
+            type: "string",
+          },
+        {
+            param_key: "password",
+            required: true,
+            type: "string",
+          },
+        ],
+    "body"
+    ),
+    loginEmail
+)
 
 export default router;

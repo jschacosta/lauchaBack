@@ -32,9 +32,9 @@ export const sendMailTest = async (req, res, next) => {
     console.log("--Send Email test--")
   
     let EMAIL_DATA = {
-        cc: ['jschacosta@gmail.com'],
-      // to: ["jschacosta@gmail.com", "stefano.celsi.12@sansano.usm.cl"],
-      to: ["jschacosta@gmail.com"],
+      cc: ['jschacosta@gmail.com'],
+      to: ["jschacosta@gmail.com", "stefano.celsi.12@sansano.usm.cl"],
+      // to: ["jschacosta@gmail.com"],
       replyTo: [],
       template: 'index',
       templateData:"{\"user_name\":\"" + ' ' + "\"}",

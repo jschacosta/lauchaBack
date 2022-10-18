@@ -20,19 +20,14 @@ const userSchema = new Schema(
       first: {
         type: String,
       },
-      middle: {
-        type: String,
-      },
       last: {
-        type: String,
-      },
-      secondLast: {
         type: String,
       },
       nickName:{
         type:String
       }
     },
+    phone:{type: String},
     username: {
       type: String,
       unique: true,
@@ -47,10 +42,30 @@ const userSchema = new Schema(
       default: "",
     },
     lastLogin: Date,
+    businessData:{
+      city:{type: String},
+      type:{
+        type: String,
+      default: "personal",
+      enum: ["hotel", "hostel", "other"],
+      },
+      name:{type: String},
+      location:{type: String},
+      owner:{
+        name: {
+          first: {
+            type: String,
+          },
+          last: {
+            type: String,
+          },
+        },
+      }  
+    },
     type: {
       type: String,
       default: "personal",
-      enum: ["personal", "business"],
+      enum: ["personal", "business", "admin"],
     },
   },
   { timestamps: true }

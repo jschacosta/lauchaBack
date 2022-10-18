@@ -45,7 +45,7 @@ const userSchema = new Schema(
     businessData:{
       city:{type: String},
       type:{
-        type: String,
+        type: String, 
       default: "personal",
       enum: ["hotel", "hostel", "other"],
       },

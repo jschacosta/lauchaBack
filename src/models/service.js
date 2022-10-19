@@ -2,11 +2,16 @@ import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 import uniqueValidator from 'mongoose-unique-validator';
 
-const serviceSchema = new Schema(
+const scheduleSchema = new Schema(
   {
-    name:{
-        type: String,
-        enum: ["barber", "yoga", "masseur"],
+    times:{
+       monday:{type:Array},
+       tuesday:{type:Array},
+       wednesday:{type:Array},
+       thursday:{tyep:Array},
+       friday:{type:Array},
+        saturday:{type:Array},
+        sunday:{type:Array}
     },
     isActive: { type: Boolean, default:true },
     details:{type:String},
@@ -15,11 +20,12 @@ const serviceSchema = new Schema(
       type: String,
       default: "",
     },
+    hostel:{type:String, ref:"User"}
   },
   { timestamps: true }
 );
 
-const Service= mongoose.model("Service", serviceSchema);
-export default Service;
+const Schedule= mongoose.model("Schedule", scheduleSchema);
+export default Schedule;
 
 

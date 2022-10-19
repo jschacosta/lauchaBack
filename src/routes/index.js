@@ -12,6 +12,7 @@ routes.get("/isAuth", isAuth, (req, res) => {
 
 routes.use("/", userNoAuth);
 routes.use("/calendar", isAuth, calendar)
+// routes.use("/events", isAuth, events)
 
 
 export default routes;

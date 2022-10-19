@@ -6,7 +6,7 @@ const eventSchema = new Schema(
   {
     isActive: { type: Boolean, default:true },
     isValidate:{type: Boolean, default:false},
-    title: {type:String},
+    title: {type:String, default:"available"},
     start: {type: String},
     end: {type: String},
     details:{type:String},

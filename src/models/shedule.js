@@ -4,15 +4,15 @@ import uniqueValidator from 'mongoose-unique-validator';
 
 const scheduleSchema = new Schema(
   {
-    hostel:{type:String, ref:u},
+    hotel:{type:String, ref:"User"},
     times:{
         monday:{type:Array},
         tuesday:{type:Array},
         wednesday:{type:Array},
         thursday:{tyep:Array},
         friday:{type:Array},
-         saturday:{type:Array},
-         sunday:{type:Array}
+        saturday:{type:Array},
+        sunday:{type:Array}
      },
     isActive: { type: Boolean, default:true },
     details:{type:String},

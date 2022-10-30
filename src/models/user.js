@@ -65,7 +65,7 @@ const userSchema = new Schema(
     type: {
       type: String,
       default: "personal",
-      enum: ["personal", "business", "admin"],
+      enum: ["personal", "business", "admin", "worker"],
     },
   },
   { timestamps: true }

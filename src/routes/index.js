@@ -1,10 +1,10 @@
 import express from "express";
 const routes = express.Router();
-import event from "./event";
-import service from "./service";
-import user from "./user";
-import notification from "./notification";
-import schedule from "./schedule";
+import event from "./event.js";
+import service from "./service.js";
+import user from "./user.js";
+import notification from "./notification.js";
+import schedule from "./schedule.js";
 import { isAuth, isAdmin, isAuthOptional } from "../config/auth.js";
 
 

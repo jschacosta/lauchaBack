@@ -135,3 +135,6 @@ export const isAuth = async (req, res, next) => {
   }
 };
 
+export const isAdmin = async (req, res, next) => {
+  
+};

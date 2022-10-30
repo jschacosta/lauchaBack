@@ -4,24 +4,27 @@ import uniqueValidator from 'mongoose-unique-validator';
 
 const eventSchema = new Schema(
   {
-    isActive: { type: Boolean, default:true },
-    isValidate:{type: Boolean, default:false},
-    title: {type:String, default:"available"},
-    start: {type: String},
-    end: {type: String},
-    details:{type:String},
-    imgUrl: {type:String},
-    service:{ type: String, ref: "Service" },
-    employee:{ type: String, ref: "User" },
-    coverImg: {
-      type: String,
-      default: "",
+    isActive: {type: Boolean, default: true },
+    title: {type:String, default:""},
+    details: {type:String},
+    service: {type: String, ref: "Service" },
+    worker: {type: String, ref: "User" },
+    hotel: {type: String, ref: "User" },
+    scheduled:{
+      date: {type: String},
+      startTime: {type: String},
+      endTime: {type: String},
     },
+    coverImg: {type: String, default: "",},
     status: {
       type: String,
-      default: "waiting",
-      enum: ["waiting", "approved", "canceled", "finished" ],
+      default: "requested",
+      enum: ["requested", "matched", "canceled", "completed", "failed" ],
     },
+    observations:Array({
+      creator: { type: String, ref: "User" },
+      observation: Array({ type: String , default: null}), 
+    }),
   },
   { timestamps: true }
 );

@@ -143,14 +143,29 @@ export const create = async (req, res, next) => {
 
 export const getUsers= async (req, res, next) => {
   console.log('GET USERS...')
-  let query={}
-  Object.assign(query, req.query);
+  let body={}
+  Object.assign(body, req.query);
+  console.log("query", body)
   let options = {
     // populate,
     // select,
-    page:query.page||1,
-    limit:query.limit||50,
+    page:body.page||1,
+    limit:body.limit||50,
     sort:{ updatedAt: -1 },
+  }
+  let query = body.type?{type:body.type}:""
+  try{
+    User.paginate(
+      query,
+      options,
+      (err, items) => {
+        if (err) return next(err);
+        res.send(items);
+      }
+    );
+  }
+  catch (err) {
+    next(err);
   }
 };
 

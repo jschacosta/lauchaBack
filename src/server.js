@@ -48,18 +48,21 @@ app.use((req, res, next) => {
 
 app.use(localeMiddleware());
 
+
+
+app.use(bodyParser.json());
+// app.use(bodyParser.urlencoded({extended: true}));
+
+app.use("/", routes);
+app.get('/', function (req, res) {
+  res.send('Hello World!');
+});
 // Middleware para Vue.js router modo history
 app.use(history());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: true}));
 
-app.use("/", routes);
 
-app.get('/', function (req, res) {
-  res.send('Hello World!');
-});
 
 
 export default app;

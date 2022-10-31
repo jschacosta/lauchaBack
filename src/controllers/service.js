@@ -84,4 +84,17 @@ export const updateOne = (req, res, next) => {
         if (err) return next(err);
         res.send(service);
       });
-  }
+}
+//Activar o desactivar multiples usuarios
+export const activateMany = (req, res, next) => {
+    console.log(req.body)
+    Service.updateMany(
+      { _id: { $in: req.body.services } },
+      { isActive: req.body.isActive?req.body.isActive:true }
+    )
+    .exec((err, data) => {
+      if (err) next(err);
+      res.send(data);
+    });
+    // res.send("buena")
+};

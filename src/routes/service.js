@@ -2,7 +2,7 @@ import Router from "express";
 const router = Router();
 import validateParams from "../middleware/validate.js";
 
-import { create, getServices, getById, updateOne} from "../controllers/service.js";
+import { create, getServices, getById, updateOne, activateMany} from "../controllers/service.js";
 
 router.post(
   "/",
@@ -64,19 +64,19 @@ router.put(
     updateOne
 );
 
-// router.put(
-//     "/active/many",
-//     validateParams(
-//       [
-//         {
-//           param_key: "users",
-//           required: true,
-//           type: "array",
-//         },
-//       ],
-//       "body"
-//     ),
-//     activateMany
-// );
+router.put(
+    "/active/many",
+    validateParams(
+      [
+        {
+          param_key: "services",
+          required: true,
+          type: "array",
+        },
+      ],
+      "body"
+    ),
+    activateMany
+);
 
 export default router;

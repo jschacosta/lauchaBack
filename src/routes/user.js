@@ -37,7 +37,7 @@ router.get(
       "params"
     ),
     getUsers
-  );
+);
 
 router.get(
 "/:id",
@@ -92,6 +92,6 @@ router.put(
       "body"
     ),
     activateMany
-  );
+);
 
 export default router;

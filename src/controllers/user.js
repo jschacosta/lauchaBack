@@ -176,18 +176,43 @@ export const getUsers= async (req, res, next) => {
 export const getById= async (req, res, next) => {
   console.log('---GET USER BY ID---')
   User.findOne({ _id: req.params.id })
-  .execFind((err, movement) => {
+  .exec((err, user) => {
     if (err) return next(err);
-    if (movement) {
-      res.send({movement})
+    if (user) {
+      res.send(user)
     } else {
-      return next(createError(404, req.lg.movement.notFound));
+      return next(createError(404, req.lg.user.notFound));
     }
   });
 };
-
-export const putUser= async (req, res, next) => {
-};
-
-export const activateMany= async (req, res, next) => {
+//Actualizar data de un usuario
+export const updateOne = (req, res, next) => {
+  console.log('---UPDATE USER---')
+  let data = req.body;
+  User.findOneAndUpdate(
+    {
+      _id: req.params.id,
+    },
+    data,
+    {
+      new: true,
+    }
+  )
+    .exec((err, user) => {
+      if (err) return next(err);
+      res.send(user);
+    });
+}
+//Activar o desactivar multiples usuarios
+export const activateMany = (req, res, next) => {
+  console.log(req.body)
+  User.updateMany(
+    { _id: { $in: req.body.users } },
+    { isActive: req.body.isActive?req.body.isActive:false }
+  )
+  .exec((err, data) => {
+    if (err) next(err);
+    res.send(data);
+  });
+  // res.send("buena")
 };

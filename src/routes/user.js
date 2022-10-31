@@ -16,7 +16,7 @@ router.post(
       {
         param_key: "password",
         required: true,
-        type: "array",
+        type: "string",
       },
     ],
     "body"
@@ -38,5 +38,25 @@ router.get(
     ),
     getUsers
   );
+
+router.put(
+"/",
+validateParams(
+    [
+    {
+        param_key: "name",
+        required: true,
+        type: "object",
+    },
+    {
+        param_key: "password",
+        required: true,
+        type: "string",
+    },
+    ],
+    "body"
+),
+create
+);
 
 export default router;

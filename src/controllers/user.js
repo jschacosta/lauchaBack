@@ -14,7 +14,7 @@ export const test = async (req, res, next) => {
     console.log('wena wena')
     res.send('wena wena')
 };
-
+//Registro de usuario
 export const registerEmail = async (req, res, next) => {
     console.log('============= REGISTER NEW USER AND CREATE TOKEN   =============')
     let user = new User(req.body);
@@ -65,6 +65,7 @@ export const registerEmail = async (req, res, next) => {
       next(err);
     }
 };
+//Login de usuario
 export const loginEmail = async (req, res, next) => {
   console.log('============= LOGIN USER BY EMAIL AND REFRESH TOKEN   =============')
     const { email, password} = req.body;
@@ -101,9 +102,9 @@ export const loginEmail = async (req, res, next) => {
       
     });  
 };
-
+//Crear usuario
 export const create = async (req, res, next) => {
-  console.log("--CREATE NEW USER--")
+  console.log("---CREATE NEW USER---")
   let user = new User(req.body);
   console.log('user',user)
   user.type = req.body.type || "personal";
@@ -140,12 +141,13 @@ export const create = async (req, res, next) => {
     next(err);
   }
 };
-
+//Obtener usuarios con paginate por tipos y activados
 export const getUsers= async (req, res, next) => {
-  console.log('GET USERS...')
+  console.log('---GET USERS---')
   let body={}
   Object.assign(body, req.query);
   console.log("query", body)
+
   let options = {
     // populate,
     // select,
@@ -153,7 +155,9 @@ export const getUsers= async (req, res, next) => {
     limit:body.limit||50,
     sort:{ updatedAt: -1 },
   }
-  let query = body.type?{type:body.type}:""
+  let query={}
+  body.type?query.type=body.type:""
+  body.isActive?query.isActive=body.isActive:""
   try{
     User.paginate(
       query,
@@ -168,12 +172,18 @@ export const getUsers= async (req, res, next) => {
     next(err);
   }
 };
-
-
+//Obtener usuario por ID
 export const getById= async (req, res, next) => {
-};
-
-export const getByType= async (req, res, next) => {
+  console.log('---GET USER BY ID---')
+  User.findOne({ _id: req.params.id })
+  .execFind((err, movement) => {
+    if (err) return next(err);
+    if (movement) {
+      res.send({movement})
+    } else {
+      return next(createError(404, req.lg.movement.notFound));
+    }
+  });
 };
 
 export const putUser= async (req, res, next) => {

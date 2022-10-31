@@ -9,13 +9,6 @@ const userSchema = new Schema(
   {
     isActive: { type: Boolean, default:true },
     isValidate:{type: Boolean, default:false},
-    password: {
-      type: String,
-      select: false,
-      trim:true, 
-      minlength: 6, 
-      required:[true, 'Password requiere']
-    },
     name: {
       first: {
         type: String,
@@ -27,30 +20,39 @@ const userSchema = new Schema(
         type:String
       }
     },
+    password: {
+      type: String,
+      select: false,
+      trim:true, 
+      minlength: 6, 
+      required:[true, 'Password requiere']
+    },
     phone:{type: String},
-    username: {
-      type: String,
-      unique: true,
-    },
-    email: {
-      type: String,
-      unique: true,
-    },
-    imgUrl: String,
-    coverImg: {
-      type: String,
-      default: "",
-    },
+    username: {type: String,unique: true},
+    email: {type: String,unique: true},
+    imgUrl: {type: String, default: ""},
+    coverImg: {type: String, default: ""},
     lastLogin: Date,
+    type: {
+      type: String,
+      default: "personal",
+      enum: ["personal", "business", "admin", "worker"],
+    },
+    personalData:{
+      nationality:{type: String},
+      country:{type: String},
+      idNumber:{type: String},
+    },
     businessData:{
-      city:{type: String},
+      location:{
+        country:{type: String},
+        city:{type: String},
+      },
       type:{
         type: String, 
-      default: "personal",
-      enum: ["hotel", "hostel", "other"],
+        enum: ["hotel", "hostel", "other"],
       },
-      name:{type: String},
-      location:{type: String},
+      name:{type: String},     
       owner:{
         name: {
           first: {
@@ -62,11 +64,10 @@ const userSchema = new Schema(
         },
       }  
     },
-    type: {
-      type: String,
-      default: "personal",
-      enum: ["personal", "business", "admin", "worker"],
-    },
+    paymentData:{
+
+    }
+    
   },
   { timestamps: true }
 );

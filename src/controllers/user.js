@@ -43,11 +43,11 @@ export const registerEmail = async (req, res, next) => {
     }
     try{
         console.log("saving...", user)
-        const item= await user.save()
-        console.log("el item", item)
+        const newUser= await user.save()
+        console.log("el item", newUser)
         let userToCreateToken = {
-          _id: item._id,
-          username: item.username,
+          _id: newUser._id,
+          username: newUser.username,
         };
         console.log(userToCreateToken,userToCreateToken._id)
         res.json({
@@ -100,4 +100,69 @@ export const loginEmail = async (req, res, next) => {
       });
       
     });  
+};
+
+export const create = async (req, res, next) => {
+  console.log("--CREATE NEW USER--")
+  let user = new User(req.body);
+  console.log('user',user)
+  user.type = req.body.type || "personal";
+  user.name.first=user.name.first.charAt(0).toUpperCase() + user.name.first.slice(1).toLowerCase().trim()
+  user.name.last=user.name.last.charAt(0).toUpperCase() + user.name.last.slice(1).toLowerCase().trim()
+  user.email= user.email.toLowerCase().trim()
+  if(user.username && user.username.length>0){
+    let exists = await User.findOne({
+      username: user.username,
+    })
+    .exec();
+    if (exists){
+      // user.username= mongoose.Types.ObjectId()
+      user.username= user.email.toLowerCase().trim().replace(/@/g,'_').replace(".","_")
+    }
+    else{
+      user.username= user.username.toLowerCase().trim()
+    }
+  }
+  else{
+    user.username= user.email.toLowerCase().trim().replace(/@/g,'_').replace(".","_")
+  }
+  try{
+    console.log("saving...", user)
+    const newUser= await user.save()
+    console.log("el item", newUser)
+    res.json(newUser)
+    // user.save((err, item) => {
+    //   if (err) next(err);
+    //   res.send("hola")
+    // });
+  }
+  catch(err){
+    next(err);
+  }
+};
+
+export const getUsers= async (req, res, next) => {
+  console.log('GET USERS...')
+  let query={}
+  Object.assign(query, req.query);
+  let options = {
+    // populate,
+    // select,
+    page:query.page||1,
+    limit:query.limit||50,
+    sort:{ updatedAt: -1 },
+  }
+};
+
+
+export const getById= async (req, res, next) => {
+};
+
+export const getByType= async (req, res, next) => {
+};
+
+export const putUser= async (req, res, next) => {
+};
+
+export const activateMany= async (req, res, next) => {
 };

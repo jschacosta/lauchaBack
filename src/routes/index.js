@@ -19,6 +19,7 @@ routes.use("/eventsAdmin", isAuth, isAdmin, event)
 
 routes.use("/serviceAdmin", isAuth, isAdmin, service)
 
+routes.use("/users", user)
 routes.use("/userAdmin", isAuth, isAdmin, user)
 
 routes.use("/notification", notification)

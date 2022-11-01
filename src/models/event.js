@@ -10,6 +10,7 @@ const eventSchema = new Schema(
     service: {type: String, ref: "Service" },
     worker: {type: String, ref: "User" },
     hotel: {type: String, ref: "User" },
+    creator:{ type: Boolean,ref:"User" },
     scheduled:{
       date: {type: String},
       startTime: {type: String},

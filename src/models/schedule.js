@@ -16,6 +16,7 @@ const scheduleSchema = new Schema(
         saturday:{type:Array, default:[]},
         sunday:{type:Array, default:[]}
      },
+    creator:{ type: Boolean,ref:"User" },
     isActive: { type: Boolean, default:true },
     details:{type:String},
     imgUrl: {type:String},

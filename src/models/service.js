@@ -18,6 +18,7 @@ const serviceSchema = new Schema(
       type: String,
       default: "",
     },
+    creator:{ type: Boolean,ref:"User" },
   },
   { timestamps: true }
 );

@@ -84,3 +84,35 @@ Schedule.findOne({ _id: req.params.id })
         }
     });
 };
+//Actualizar data de un usuario
+export const updateOne = (req, res, next) => {
+    console.log('---UPDATE SCHEDULE---')
+    let data = req.body;
+    Schedule.findOneAndUpdate(
+      {
+        _id: req.params.id,
+      },
+      data,
+      {
+        new: true,
+      }
+    )
+      .exec((err, schedule) => {
+        if (err) return next(err);
+        res.send(schedule);
+      });
+}
+//Activar o desactivar multiples usuarios
+export const activateMany = (req, res, next) => {
+    console.log("---ACTIVATE MANY SCHEDULE---")
+    console.log(req.body)
+    Schedule.updateMany(
+      { _id: { $in: req.body.schedules } },
+      { isActive: req.body.isActive?req.body.isActive:true }
+    )
+    .exec((err, data) => {
+      if (err) next(err);
+      res.send(data);
+    });
+    // res.send("buena")
+};

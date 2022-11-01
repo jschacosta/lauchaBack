@@ -3,7 +3,7 @@ const router = Router();
 
 import validateParams from "../middleware/validate.js";
 
-import { create, getSchedules, getById} from "../controllers/schedule.js";
+import { create, getSchedules, getById, updateOne,  activateMany} from "../controllers/schedule.js";
 
 router.post(
     "/",
@@ -81,7 +81,36 @@ router.get(
         "params"
     ),
     getById
-    );
+);
+router.put(
+    "/:id",
+    validateParams(
+      [
+        {
+          param_key: "id",
+          required: true,
+          type: "string",
+        },
+      ],
+      "params"
+    ),
+    updateOne
+);
+
+router.put(
+    "/active/many",
+    validateParams(
+      [
+        {
+          param_key: "services",
+          required: true,
+          type: "array",
+        },
+      ],
+      "body"
+    ),
+    activateMany
+);
 
 
 export default router;

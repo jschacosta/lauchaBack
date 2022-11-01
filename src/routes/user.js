@@ -2,7 +2,7 @@ import Router from "express";
 const router = Router();
 import validateParams from "../middleware/validate.js";
 
-import { create, getById, getUsers, updateOne, activateMany } from "../controllers/user.js";
+import { create, getById, getUsers, updateOne, activateMany, getUsersByService } from "../controllers/user.js";
 
 router.post(
   "/",
@@ -37,6 +37,21 @@ router.get(
       "params"
     ),
     getUsers
+);
+
+router.get(
+  "/findService/:body",
+  validateParams(
+    [
+      {
+        param_key: "body",
+        required: true,
+        type: "string",
+      },
+    ],
+    "params"
+  ),
+  getUsersByService
 );
 
 router.get(

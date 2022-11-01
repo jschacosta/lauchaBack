@@ -172,6 +172,49 @@ export const getUsers= async (req, res, next) => {
     next(err);
   }
 };
+//Obtener usuarios con paginate por tipos y activados
+export const getUsersByService= async (req, res, next) => {
+  console.log('---GET USERS BY SERVICE---')
+  let body={}
+  Object.assign(body, req.query);
+  console.log("query", body)
+  const populate = [
+    {
+      path: "personalData.service",
+      // select: "isActive name  email phone creator user imgUrl emails type",
+    }
+  ];
+  let options = {
+    populate,
+    // select,
+    page:body.page||1,
+    limit:body.limit||50,
+    sort:{ updatedAt: -1 },
+  }
+  let query={
+    personalData:{
+      service:""
+    }
+  }
+  body.type?query.type=body.type:""
+  body.isActive?query.isActive=body.isActive:""
+  body.service?query.personalData.service=body.service:""
+  console.log("la query", query)
+  try{
+    User.paginate(
+      query,
+      options,
+      (err, items) => {
+        if (err) return next(err);
+        res.send(items);
+      }
+    );
+  }
+  catch (err) {
+    next(err);
+  }
+};
+
 //Obtener usuario por ID
 export const getById= async (req, res, next) => {
   console.log('---GET USER BY ID---')

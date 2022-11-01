@@ -44,6 +44,7 @@ const userSchema = new Schema(
       nationality:{type: String},
       country:{type: String},
       idNumber:{type: String},
+      service:{type: String, ref:"Service"}
     },
     businessData:{
       location:{
@@ -67,9 +68,7 @@ const userSchema = new Schema(
       }  
     },
     paymentData:{
-
     }
-    
   },
   { timestamps: true }
 );

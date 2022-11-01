@@ -20,12 +20,13 @@ routes.use("/eventsAdmin", isAuth, isAdmin, event)
 routes.use("/serviceAdmin", isAuth, isAdmin, service)
 routes.use("/services", service)
 
+
 routes.use("/users", user)
 routes.use("/userAdmin", isAuth, isAdmin, user)
 
 routes.use("/notification", notification)
 
-routes.use("/schedule", schedule)
+routes.use("/schedules", schedule)
 
 
 export default routes;

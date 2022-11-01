@@ -1,6 +1,8 @@
 import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 import uniqueValidator from 'mongoose-unique-validator';
+import mongoosePaginate from "mongoose-paginate-v2";
+import paginateConfig from "../config/paginate.js";
 
 const scheduleSchema = new Schema(
   {
@@ -24,6 +26,12 @@ const scheduleSchema = new Schema(
   },
   { timestamps: true }
 );
+
+
+//Validate unique value message
+scheduleSchema.plugin(uniqueValidator, { message: 'This {PATH} is already in use.' });
+scheduleSchema.plugin(mongoosePaginate);
+mongoosePaginate.paginate.options = paginateConfig;
 
 const Schedule= mongoose.model("Schedule", scheduleSchema);
 export default Schedule;

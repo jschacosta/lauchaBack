@@ -16,7 +16,7 @@ export const create = async (req, res, next) => {
   schedule.times.friday=req.body.friday
   schedule.times.saturday=req.body.saturday
   schedule.times.sunday=req.body.sunday
-  try{
+  try{ 
     console.log("saving...", schedule)
     const newSchedule= await schedule.save()
     console.log("nuevo horario", newSchedule)
@@ -68,6 +68,7 @@ export const getById= async (req, res, next) => {
 console.log('---GET SCHEDULE BY ID---')
 Schedule.findOne({ _id: req.params.id })
     .exec((err, schedule) => {
+      if (err) next(err);
         schedule.populate(
             [
                 {

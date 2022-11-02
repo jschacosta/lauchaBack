@@ -17,6 +17,7 @@ export const test = async (req, res, next) => {
 //Registro de usuario
 export const registerEmail = async (req, res, next) => {
     console.log('============= REGISTER NEW USER AND CREATE TOKEN   =============')
+    console.log(req.body)
     let user = new User(req.body);
     if (req.body.password) {
       user.password = User.hash(req.body.password);
@@ -53,7 +54,7 @@ export const registerEmail = async (req, res, next) => {
         res.json({
           access_token: accessTokenGen(userToCreateToken, true),
               refresh_token: refreshTokenGen(userToCreateToken),
-              user:item,
+              user:newUser,
         })
 
         // user.save((err, item) => {

@@ -18,7 +18,7 @@ routes.use("/eventsAuth", isAuth, event)
 routes.use("/eventsAdmin", isAuth, isAdmin, event)
 
 routes.use("/serviceAdmin", isAuth, isAdmin, service)
-routes.use("/services", service)
+routes.use("/services", isAuth, service)
 
 
 routes.use("/users", user)

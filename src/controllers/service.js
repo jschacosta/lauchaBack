@@ -6,9 +6,9 @@ import { notFoundError, createError, missingData, duplicateData } from "../confi
 
 //Crear usuario
 export const create = async (req, res, next) => {
-  console.log("---CREATE NEW SERVICE---")
+  console.log("---CREATE NEW SERVICE---",req.user)
   let service = new Service(req.body);
-  console.log('user',service)
+  console.log('serrevicio',service)
   service.name=service.name.toLowerCase()
 
   try{

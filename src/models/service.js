@@ -8,7 +8,7 @@ const serviceSchema = new Schema(
   {
     name:{
         type: String,
-        enum: ["barber", "yoga", "masseur"],
+        // enum: ["barber", "yoga", "masseur"],
         unique: true
     },
     isActive: { type: Boolean, default:true },

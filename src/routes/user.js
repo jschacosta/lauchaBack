@@ -2,7 +2,7 @@ import Router from "express";
 const router = Router();
 import validateParams from "../middleware/validate.js";
 
-import { create, registerEmail, getById, getUsers, updateOne, activateMany, getUsersByService } from "../controllers/user.js";
+import { create, registerEmail, loginEmail, getById, getUsers, updateOne, activateMany, getUsersByService } from "../controllers/user.js";
 
 router.post(
   "/",
@@ -26,22 +26,41 @@ router.post(
 
 router.post(
   "/registerEmail",
-  // validateParams(
-  //   [
-  //     {
-  //       param_key: "name",
-  //       required: true,
-  //       type: "string",
-  //     },
-  //     {
-  //       param_key: "password",
-  //       required: true,
-  //       type: "string",
-  //     },
-  //   ],
-  //   "body"
-  // ),
+  validateParams(
+    [
+      {
+        param_key: "name",
+        required: true,
+        type: "string",
+      },
+      {
+        param_key: "password",
+        required: true,
+        type: "string",
+      },
+    ],
+    "body"
+  ),
   registerEmail
+);
+router.post(
+  "/loginEmail",
+  validateParams(
+    [
+      {
+        param_key: "email",
+        required: true,
+        type: "string",
+      },
+      {
+        param_key: "password",
+        required: true,
+        type: "string",
+      },
+    ],
+    "body"
+  ),
+  loginEmail
 );
 
 router.get(

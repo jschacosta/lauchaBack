@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 
-const uri = 'mongodb+srv://coloro:Pepekika@pollagol.5pmli.mongodb.net/barberApi?retryWrites=true&w=majority'
+const uri = 'mongodb+srv://sostravelbr:viajanteDb_sos@cluster0.qprjwcb.mongodb.net/'
 mongoose.connect(uri, {
     useNewUrlParser: true,
     useUnifiedTopology: true,

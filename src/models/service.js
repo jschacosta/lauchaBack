@@ -6,20 +6,25 @@ import paginateConfig from "../config/paginate.js";
 
 const serviceSchema = new Schema(
   {
-    name:{
-        type: String,
-        // enum: ["barber", "yoga", "masseur"],
-        unique: true
-    },
+    name:{type: String},
     isActive: { type: Boolean, default:true },
+    icon:{type:String},
     details:{type:String},
     imgUrl: {type:String},
     coverImg: {
       type: String,
       default: "",
     },
-    creator:{ type: Boolean,ref:"User" },
+    creator:{ type: String,ref:"User" },
+    updated:{
+      updatedAt: {
+          type: Date,
+          default: new Date(),
+      },
+      updatedBy:{ type: String,ref:"User"},
+  }
   },
+  
   { timestamps: true }
 );
 

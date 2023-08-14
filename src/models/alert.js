@@ -14,7 +14,7 @@ const alertSchema = new Schema(
     },
     event: { type: String, ref: "Event"},
     isActive: { type: Boolean, default: false },
-  },xw
+  },
   { timestamps: true }
 );
 

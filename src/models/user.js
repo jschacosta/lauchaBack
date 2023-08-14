@@ -63,7 +63,7 @@ const userSchema = new Schema(
 
     },
     workerData:{
-      myLanguages:{
+      languages:{
         main:{
           type: String,
           default: "EN",

@@ -1,7 +1,7 @@
 import  Router  from "express";
 import {
-    create,test, getById, getEvents, updateOne
-} from "../controllers/event.js";
+    create,test, getById, getBookings, updateOne
+} from "../controllers/booking.js";
 import  validateParams  from "../middleware/validate.js";
 
 const router = Router();
@@ -38,7 +38,7 @@ router.post(
 );
 
 router.get(
-    "/allEvents/:body",
+    "/allBookings/:body",
     validateParams(
       [
         {
@@ -49,7 +49,7 @@ router.get(
       ],
       "params"
     ),
-    getEvents
+    getBookings
 );
 
 router.get(

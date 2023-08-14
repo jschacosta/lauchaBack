@@ -1,15 +1,14 @@
 import mongoose from "mongoose";
 const Schema = mongoose.Schema;
-import uniqueValidator from 'mongoose-unique-validator';
 import mongoosePaginate from "mongoose-paginate-v2";
 import paginateConfig from "../config/paginate.js";
 
-const eventSchema = new Schema(
+const bookingSchema = new Schema(
   {
     isActive: {type: Boolean, default: true },
     title: {type:String, default:"new Event"},
     details: {type:String},
-    hotel: {type: String, ref: "User" },
+    location: {type: String, ref: "User" },
     service: {type: String, ref: "Service" },
     worker: {type: String, ref: "User" },
     client:{type:String, ref: "User"},
@@ -35,9 +34,9 @@ const eventSchema = new Schema(
   { timestamps: true }
 );
 
-eventSchema.plugin(mongoosePaginate);
+bookingSchema.plugin(mongoosePaginate);
 mongoosePaginate.paginate.options = paginateConfig;
-const Event= mongoose.model("Event", eventSchema);
-export default Event;
+const Booking= mongoose.model("Booking", bookingSchema);
+export default Booking;
 
 

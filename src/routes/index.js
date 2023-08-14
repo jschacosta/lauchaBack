@@ -1,6 +1,6 @@
 import express from "express";
 const routes = express.Router();
-import event from "./event.js";
+import booking from "./booking.js";
 import service from "./service.js";
 import user from "./user.js";
 import notification from "./notification.js";
@@ -13,9 +13,9 @@ routes.get("/isAuth", isAuth, (req, res) => {
     res.send(req.user.getUser());
   });
 
-routes.use("/events", event)
-routes.use("/eventsAuth", isAuth, event)
-routes.use("/eventsAdmin", isAuth, isAdmin, event)
+routes.use("/booking", booking)
+routes.use("/bookingAuth", isAuth, booking)
+routes.use("/boookingAdmin", isAuth, isAdmin, booking)
 
 routes.use("/serviceAdmin", isAuth, isAdmin, service)
 routes.use("/services", isAuth, service)

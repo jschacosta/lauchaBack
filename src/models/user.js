@@ -10,18 +10,7 @@ import paginateConfig from "../config/paginate.js";
 const userSchema = new Schema(
   {
     isActive: { type: Boolean, default:true },
-    isValidate:{type: Boolean, default:false},
-    name: {
-      first: {
-        type: String,
-      },
-      last: {
-        type: String,
-      },
-      nickName:{
-        type:String
-      }
-    },
+    isValidate:{type: Boolean, default:false}, 
     password: {
       type: String,
       select: false,
@@ -29,22 +18,72 @@ const userSchema = new Schema(
       minlength: 6, 
       required:[true, 'Password requiere']
     },
-    phone:{type: String},
     username: {type: String,unique: true},
     email: {type: String,unique: true},
-    imgUrl: {type: String, default: ""},
-    coverImg: {type: String, default: ""},
-    lastLogin: Date,
     type: {
       type: String,
       default: "personal",
       enum: ["personal", "business", "admin", "worker"],
     },
+    phone:{type: String},
+    img:{
+      imgUrl: {type: String, default: ""},
+      coverImg: {type: String, default: ""},
+      gallery:{type: Array},
+    },   
+    updatedAt: {
+      type: Date,
+      default: new Date(),
+    },
+    lastLogin: {
+      type: Date,
+      default: new Date(),
+    },
+    about:{type: String, default: ""},
+    language: {
+      type: String,
+      default: "EN",
+      enum: ["EN", "ES", "Fr", "Br"],
+    },
     personalData:{
+      name: {
+        first: {
+          type: String,
+        },
+        last: {
+          type: String,
+        },
+        nickName:{
+          type:String
+        }
+      },
       nationality:{type: String},
       country:{type: String},
       idNumber:{type: String},
-      service:{type: String, ref:"Service"}
+
+    },
+    workerData:{
+      myLanguages:{
+        main:{
+          type: String,
+          default: "EN",
+          enum: ["EN", "ES", "Fr", "Br"],
+        },
+        secondary:{type: Array},
+      },
+      services:[
+        {
+          id: {
+            type: String,
+            ref:"Service",
+          },
+          subServices: Array({
+            type: String,
+            ref: "SubServices",
+          }),
+          gallery:{type: Array},
+        },
+      ],
     },
     businessData:{
       location:{
@@ -68,7 +107,8 @@ const userSchema = new Schema(
       }  
     },
     paymentData:{
-    }
+    },
+    currency:{type: String, ref:"Currency"}
   },
   { timestamps: true }
 );

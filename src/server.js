@@ -54,8 +54,20 @@ app.use(bodyParser.json());
 // app.use(bodyParser.urlencoded({extended: true}));
 
 app.use("/", routes);
-app.get('/', function (req, res) {
-  res.send('Barber Api works!');
+app.get('/', (req, res) => {
+  const htmlResponse = `
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <title>SOS-API</title>
+      </head>
+      <body>
+        <h1>Welcome to the SOS API TRAVELERS</h1>
+        <p>This is a more elaborate HTML response</p>
+      </body>
+    </html>
+  `;
+  res.send(htmlResponse);
 });
 // Middleware para Vue.js router modo history
 app.use(history());

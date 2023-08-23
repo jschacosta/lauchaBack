@@ -14,57 +14,88 @@ export const test = async (req, res, next) => {
     console.log('wena wena')
     res.send('wena wena')
 };
+
+
+function procesarNombre(nombre) {
+  const partes = nombre.split(' ');  // Dividir el string en partes utilizando el espacio como separador
+
+  if (partes.length > 2) {
+    // Si hay más de dos partes, unir las partes después de la primera
+    const restoDelNombre = partes.slice(1).join(' ');
+    return [partes[0], restoDelNombre];
+  } else {
+    // Si no hay más de dos partes, devolver el nombre original
+    return [nombre];
+  }
+}
+
+
+
 //Registro de usuario
 export const registerEmail = async (req, res, next) => {
     console.log('============= REGISTER NEW USER AND CREATE TOKEN   =============')
     console.log(req.body)
-    let user = new User(req.body);
-    if (req.body.password) {
-      user.password = User.hash(req.body.password);
-    }
-    user.type = req.body.type || "personal";
-    user.name.first=req.body.name.charAt(0).toUpperCase() + req.body.name.slice(1).toLowerCase().trim()
-    user.name.last=req.body.lastName.charAt(0).toUpperCase() + req.body.lastName.slice(1).toLowerCase().trim()
-    user.email= user.email.toLowerCase().trim()
-    if(user.username && user.username.length>0){
-      let exists = await User.findOne({
-        username: user.username,
-      })
-      .exec();
-      if (exists){
-        // user.username= mongoose.Types.ObjectId()
-        user.username= user.email.toLowerCase().trim().replace(/@/g,'_').replace(".","_")
-      }
+    User.findOne({email:req.body.email})
+    .exec(async (err, theUser) => {
+      if (theUser) return next(createError(409, "This email is already in usessss"));
       else{
-        user.username= user.username.toLowerCase().trim()
-      }
-    }
-    else{
-      user.username= user.email.toLowerCase().trim().replace(/@/g,'_').replace(".","_")
-    }
-    try{
-        console.log("saving...", user)
-        const newUser= await user.save()
-        console.log("el item", newUser)
-        let userToCreateToken = {
-          _id: newUser._id,
-          username: newUser.username,
-        };
-        console.log(userToCreateToken,userToCreateToken._id)
-        res.json({
-          access_token: accessTokenGen(userToCreateToken, true),
-              refresh_token: refreshTokenGen(userToCreateToken),
-              user:newUser,
-        })
+        let user = new User(req.body);
+        if (req.body.password) {
+          user.password = User.hash(req.body.password);
+        }
+        user.type = req.body.type || "personal";
+        let name = procesarNombre(req.body.name)
+        console.log("name", name)
+        if(name.length>1){
+          user.personalData.name.first=name[0].charAt(0).toUpperCase() + name[0].slice(1).toLowerCase().trim()
+          user.personalData.name.last=name[1].charAt(0).toUpperCase() + name[1].slice(1).toLowerCase().trim()
+        }
+        else{
+          user.personalData.name.first=name[0].charAt(0).toUpperCase() + name[0].slice(1).toLowerCase().trim()
+        }  
+        user.email= user.email.toLowerCase().trim()
+        if(user.username && user.username.length>0){
+          let exists = await User.findOne({
+            username: user.username,
+          })
+          .exec();
+          if (exists){
+            // user.username= mongoose.Types.ObjectId()
+            user.username= user.email.toLowerCase().trim().replace(/@/g,'_').replace(".","_")
+          }
+          else{
+            user.username= user.username.toLowerCase().trim()
+          }
+        }
+        else{
+          user.username= user.email.toLowerCase().trim().replace(/@/g,'_').replace(".","_")
+        }
+        try{
+            console.log("saving...", user)
+            const newUser= await user.save()
+            console.log("el item", newUser)
+            let userToCreateToken = {
+              _id: newUser._id,
+              username: newUser.username,
+            };
+            console.log(userToCreateToken,userToCreateToken._id)
+            res.json({
+              access_token: accessTokenGen(userToCreateToken, true),
+                  refresh_token: refreshTokenGen(userToCreateToken),
+                  user:newUser,
+            })
+    
+            // user.save((err, item) => {
+            //   if (err) next(err);
+            //   res.send("hola")
+            // });
+        }
+        catch(err){
+          next(err);
+        }
 
-        // user.save((err, item) => {
-        //   if (err) next(err);
-        //   res.send("hola")
-        // });
-    }
-    catch(err){
-      next(err);
-    }
+      }
+    });  
 };
 //Login de usuario
 export const loginEmail = async (req, res, next) => {

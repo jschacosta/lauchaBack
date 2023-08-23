@@ -25,11 +25,16 @@ router.post(
 );
 
 router.post(
-  "/registerEmail",
+  "/register",
   validateParams(
     [
       {
         param_key: "name",
+        required: true,
+        type: "string",
+      },
+      {
+        param_key: "email",
         required: true,
         type: "string",
       },

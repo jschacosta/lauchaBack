@@ -1,6 +1,6 @@
 import server from './server.js';
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 4000;
 server.listen(port, function () {
-  console.log('Barber App Api is listening on port '+ port);
+  console.log('SOS API TRAVELERS is listening on port '+ port + ' AGUANTE LA U !!');
 });

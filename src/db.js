@@ -1,8 +1,19 @@
 import mongoose from "mongoose";
+import envar from "./lib/envar.js";
 
 
-const uri = 'mongodb+srv://sostravelbr:viajanteDb_sos@cluster0.qprjwcb.mongodb.net/'
-mongoose.connect(uri, {
+const dbConfig = {
+  dev: `mongodb+srv://${envar().DB_USER}:${envar().DB_PASS}@${envar().DB_DEV}`,
+  test: `mongodb+srv://${envar().DB_USER}:${envar().DB_PASS}@${envar().DB_TEST}`,
+  production: `mongodb+srv://${envar().DB_USER}:${envar().DB_PASS}@${envar().DB_PROD}`,
+};
+
+const url = "mongodb://localhost:27017/dev"
+const env = process.env.NODE_ENV || "";
+console.log(url)
+console.log(dbConfig[env])
+
+mongoose.connect(dbConfig[env], {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     // useFindAndModify: false,

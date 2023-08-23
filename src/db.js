@@ -11,6 +11,7 @@ const dbConfig = {
 const url = "mongodb://localhost:27017/dev"
 const env = process.env.NODE_ENV || "";
 console.log(url)
+console.log(dbConfig,envar().DB_USER)
 console.log(dbConfig[env])
 
 mongoose.connect(dbConfig[env], {

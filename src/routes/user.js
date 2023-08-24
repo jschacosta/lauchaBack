@@ -2,7 +2,7 @@ import Router from "express";
 const router = Router();
 import validateParams from "../middleware/validate.js";
 
-import { create, registerEmail, loginEmail, getById, getUsers, updateOne, activateMany, getUsersByService } from "../controllers/user.js";
+import { create, registerEmail, loginEmail, getById, getUsers, updateOne, activateMany, getUsersByService, deleteById } from "../controllers/user.js";
 
 router.post(
   "/",
@@ -69,31 +69,31 @@ router.post(
 );
 
 router.get(
-    "/allUsers/:body",
-    validateParams(
-      [
-        {
-          param_key: "body",
-          required: true,
-          type: "string",
-        },
-      ],
-      "params"
-    ),
+    "/all",
+    // validateParams(
+    //   [
+    //     {
+    //       param_key: "body",
+    //       required: true,
+    //       type: "object",
+    //     },
+    //   ],
+    //   "query"
+    // ),
     getUsers
 );
 
 router.get(
-  "/findService/:body",
+  "/findService/:bodyParams",
   validateParams(
     [
       {
-        param_key: "body",
+        param_key: "bodyParams",
         required: true,
         type: "string",
       },
     ],
-    "params"
+    "query"
   ),
   getUsersByService
 );
@@ -152,5 +152,19 @@ router.put(
     ),
     activateMany
 );
+router.delete(
+  "/:id",
+  validateParams(
+      [
+      {
+          param_key: "id",
+          required: true,
+          type: "string",
+      },
+      ],
+      "params"
+  ),
+  deleteById
+  );
 
 export default router;

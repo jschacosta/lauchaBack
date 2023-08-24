@@ -5,13 +5,15 @@ import service from "./service.js";
 import user from "./user.js";
 import notification from "./notification.js";
 import schedule from "./schedule.js";
-import { isAuth, isAdmin, isAuthOptional } from "../config/auth.js";
+import { isAuth, isAdmin, isAuthOptional, renewToken } from "../config/auth.js";
 
 
 routes.get("/isAuth", isAuth, (req, res) => {
     res.statusMessage = "authenticated";
     res.send(req.user.getUser());
-  });
+});
+
+routes.post("/renew",renewToken);
 
 routes.use("/booking", booking)
 routes.use("/bookingAuth", isAuth, booking)
@@ -22,7 +24,8 @@ routes.use("/services", isAuth, service)
 
 
 routes.use("/users", user)
-routes.use("/userAdmin", isAuth, isAdmin, user)
+routes.use("/usersAuth", isAuth, user)
+routes.use("/usersAdmin", isAuth, isAdmin, user)
 
 routes.use("/notification", notification)
 

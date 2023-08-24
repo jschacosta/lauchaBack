@@ -4,6 +4,7 @@ import checkObjectId from "../lib/db/checkObjectId.js";
 const validateParams = function(requestParams, toValidate) {
   return function(req, res, next) {
     for (let param of requestParams) {
+      console.log(param)
       if (checkParamPresent(Object.keys(req[toValidate]), param)) {
         let reqParam = req[toValidate][param.param_key];
         if (!checkParamType(reqParam, param)) {
@@ -29,10 +30,6 @@ const validateParams = function(requestParams, toValidate) {
         }
       } else if (param.required) {
         console.log('caso4')
-        // return res.send(400, {
-        //   status: 400,
-        //   result: `Missing Parameter ${param.param_key}`
-        // });
         return res.status(400).send({
           status: 400,
           result: `Missing Parameter ${param.param_key}`

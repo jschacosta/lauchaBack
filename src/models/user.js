@@ -20,10 +20,11 @@ const userSchema = new Schema(
     },
     username: {type: String,unique: true},
     email: {type: String,unique: true},
+    isAdminUser:{type: Boolean},
     type: {
       type: String,
       default: "personal",
-      enum: ["personal", "business", "admin", "worker"],
+      enum: ["personal", "business", "worker"],
     },
     phone:{type: String},
     img:{

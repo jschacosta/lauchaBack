@@ -16,12 +16,14 @@ const decodeFunc = (token) => {
 const encodeFunc = (toSing, expiresIn) => {
   return jwt.sign(toSing, envar().SECRET, { expiresIn });
 };
-const accessToken = (user, tokenFresh = false) => {
-  return encodeFunc({ ...user, tokenFresh }, "365d");
+const accessToken = (user, tokenFresh = false,time) => {
+  console.log("llego aqui")
+  let tiempo = time?time:"1d"
+  return encodeFunc({ ...user, tokenFresh },tiempo);
 };
 const tokenEmailFunction = (user, tokenFresh = false) => {
   return encodeFunc({ ...user, tokenFresh }, "15min");
-};
+}; 
 
 // export the functions to decoded, encoded and generate accessToken
 export const decode = decodeFunc;
@@ -30,8 +32,9 @@ export const accessTokenGen = accessToken;
 export const tokenEmail=tokenEmailFunction;
 
 // export the functions to generate refresh_token and get access with the refresh_token
-export const refreshTokenGen = (user) => {
-  return encodeFunc(user, "60d");
+export const refreshTokenGen = (user,time) => {
+  let tiempo = time?time:"30d"
+  return encodeFunc(user, tiempo);
 };
 export const getTokenByRefresh = (refresh) => {
   let payload = decodeFunc(refresh);
@@ -87,17 +90,67 @@ export const isAuthOptional = async (req, res, next) => {
 };
 
 
+export const renewToken = async (req,res,next)=>{
+  console.log("renew tokens",req.body)
+  req.access_token = req.headers.authorization;
+  const accessTime = req.body.accessTime?req.body.accessTime:"1d"
+  const refreshTime = req.body.refreshTime?req.body.refreshTime:"30d"
+  if (typeof req.access_token !== "undefined" && req.access_token !== "") {
+    let decoded = decodeFunc(req.access_token);
+    let authUser;
+    console.log(decoded)
+    if(!decoded.tokenFresh){
+      try {
+        console.log('perro',decoded)
+        authUser = await User.findOne({ _id: decoded._id })
+          .select("username _id")
+          .exec();
+        console.log('authUser',authUser)
+        authUser.id = authUser._id.toString();
+        
+        let userRefresh ={
+          _id: authUser._id,
+        }
+        console.log("refresh", userRefresh)
+        res.json({
+          access_token: accessTokenGen(authUser, true,accessTime),
+          refresh_token: refreshTokenGen(userRefresh, refreshTime),
+        })
+      } 
+      catch (err) {
+        let isTokenError = decoded.name === "TokenExpiredError" ? true : false;
+        if (isTokenError) {
+          let error = createError(401,"The token has expired.");
+          return res.status(401).json(error);
+        } else {
+          let error = createError(401,"Not authorized.");
+          return res.status(401).json(error);
+        }
+      }
+    }
+    else{
+      res.status(401).send({
+        msg: "token not valid",
+      });
+    }
+    
+  } else if (req.method === "OPTIONS" || req.query.outside) {
+    console.log(req.query);
+    next();
+  } else {
+    res.status(401).send({
+      msg: "Not authorized, client must send an access token.",
+    });
+  }
+}
 
 export const isAuth = async (req, res, next) => {
   console.log("validate auth")
-  console.log(req.headers.authorization)
   req.access_token = req.headers.authorization;
-  console.log(req.access_token)
   if (typeof req.access_token !== "undefined" && req.access_token !== "") {
     let decoded = decodeFunc(req.access_token);
     let authUser;
     try {
-      console.log("vamos bien")
       console.log(decoded)
       authUser = await User.findOne({ _id: decoded._id })
         .select("isActive isActive name username email imgUrl")
@@ -111,7 +164,6 @@ export const isAuth = async (req, res, next) => {
         //   },
         // ])
         .exec();
-      console.log(authUser)
       authUser.id = authUser._id.toString();
       req.user = authUser;
       next();
@@ -119,9 +171,11 @@ export const isAuth = async (req, res, next) => {
       let isTokenError = decoded.name === "TokenExpiredError" ? true : false;
 
       if (isTokenError) {
-        next(createError(401, "The token has expired"));
+        let error = createError(401,"The token has expired.");
+        return res.status(401).json(error);
       } else {
-        next(createError(304, "Not authorized."));
+        let error = createError(401,"Not authorized.");
+        return res.status(401).json(error);
       }
     }
     // next();
@@ -134,7 +188,43 @@ export const isAuth = async (req, res, next) => {
     });
   }
 };
-
 export const isAdmin = async (req, res, next) => {
-  
+  console.log("validate admin")
+  req.access_token = req.headers.authorization;
+  if (typeof req.access_token !== "undefined" && req.access_token !== "") {
+    let decoded = decodeFunc(req.access_token);
+    let authUser;
+    try {
+      console.log("vamos bien")
+      console.log(decoded)
+      authUser = await User.findOne({ _id: decoded._id })
+        .select("isAdminUser _id isActive name username ")
+        .exec();
+      console.log(authUser)
+      if(authUser._id && authUser.isAdminUser){
+        next();
+      }
+      else{
+        let error = createError(401,"Dont have access");
+        return res.status(401).json(error);
+      }
+    } catch (err) {
+      let isTokenError = decoded.name === "TokenExpiredError" ? true : false;
+      if (isTokenError) {
+        let error = createError(401,"The token has expired.");
+        return res.status(401).json(error);
+      } else {
+        let error = createError(401,"Not authorized.");
+        return res.status(401).json(error);
+      }
+    }
+    // next();
+  } else if (req.method === "OPTIONS" || req.query.outside) {
+    console.log(req.query);
+    next();
+  } else {
+    res.status(401).send({
+      msg: "Not authorized, client must send an access token.",
+    });
+  }
 };

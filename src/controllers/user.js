@@ -14,8 +14,6 @@ export const test = async (req, res, next) => {
     console.log('wena wena')
     res.send('wena wena')
 };
-
-
 function procesarNombre(nombre) {
   const partes = nombre.split(' ');  // Dividir el string en partes utilizando el espacio como separador
 
@@ -29,15 +27,21 @@ function procesarNombre(nombre) {
   }
 }
 
-
-
 //Registro de usuario
 export const registerEmail = async (req, res, next) => {
     console.log('============= REGISTER NEW USER AND CREATE TOKEN   =============')
     console.log(req.body)
-    User.findOne({email:req.body.email})
+    const accessTime = req.body.accessTime?req.body.accessTime:"1d"
+    const refreshTime = req.body.refreshTime?req.body.refreshTime:"30d"
+    req.body.accessTime?delete req.body.accessTime:""
+    req.body.refreshTime?delete req.body.refreshTime:""
+    let theEmail= req.body.email.toLowerCase().trim()
+    User.findOne({email:theEmail})
     .exec(async (err, theUser) => {
-      if (theUser) return next(createError(409, "This email is already in usessss"));
+      if (theUser){
+        let error = createError(409, "This email is already in use");
+        return res.status(409).json(error); 
+      } 
       else{
         let user = new User(req.body);
         if (req.body.password) {
@@ -53,7 +57,7 @@ export const registerEmail = async (req, res, next) => {
         else{
           user.personalData.name.first=name[0].charAt(0).toUpperCase() + name[0].slice(1).toLowerCase().trim()
         }  
-        user.email= user.email.toLowerCase().trim()
+        user.email= theEmail
         if(user.username && user.username.length>0){
           let exists = await User.findOne({
             username: user.username,
@@ -78,11 +82,13 @@ export const registerEmail = async (req, res, next) => {
               _id: newUser._id,
               username: newUser.username,
             };
-            console.log(userToCreateToken,userToCreateToken._id)
+            let userRefresh ={
+              _id: newUser._id,
+            }
             res.json({
-              access_token: accessTokenGen(userToCreateToken, true),
-                  refresh_token: refreshTokenGen(userToCreateToken),
-                  user:newUser,
+              access_token: accessTokenGen(userToCreateToken, true,accessTime),
+              refresh_token: refreshTokenGen(userRefresh, refreshTime),
+              user:newUser,
             })
     
             // user.save((err, item) => {
@@ -100,20 +106,24 @@ export const registerEmail = async (req, res, next) => {
 //Login de usuario
 export const loginEmail = async (req, res, next) => {
   console.log('============= LOGIN USER BY EMAIL AND REFRESH TOKEN   =============')
-    const { email, password} = req.body;
+    let { email, password} = req.body;
+    email= email.toLowerCase().trim()
     User.findOne({email})
-    .select(
-      "name _id email isActive"
-    )
     // .populate("users")
     .exec(async (err, user) => {
       if (err) return next(err);
-      if (!user) return next(notFoundError());
+      if (!user){
+          let error = createError(401, "User not found or invalid credentials");
+          return res.status(401).json(error);
+      }
       const isValid =
       typeof password !== "undefined"
       ? await User.validPassword(user._id.toString(), password)
       : false;
-      if (!isValid) return next(createError(403, "wrong password"));
+      if (!isValid){
+        let error = createError(404, "User not found or invalid credentials");
+        return res.status(404).json(error);
+      } 
       user.lastLogin = Date.now();
       user.save(async (err,user) => {
         if (err) next(err);
@@ -246,21 +256,26 @@ export const getUsersByService= async (req, res, next) => {
     next(err);
   }
 };
-
 //Obtener usuario por ID
 export const getById= async (req, res, next) => {
   console.log('---GET USER BY ID---')
   User.findOne({ _id: req.params.id })
   .exec((err, user) => {
-    if (err) return next(err);
-    if (user) {
+    console.log(err,user)
+    if (err){
+      let error = createError(400, "Invalid ID format");
+      console.log(error);
+      return res.status(400).json(error);
+    } 
+    else if (user) {
       res.send(user)
     } else {
-      return next(createError(404, req.lg.user.notFound));
+      let error = createError(404, "User not found");
+      return res.status(401).json(error);
     }
   });
 };
-//Actualizar data de un usuario
+//Borrar usuario
 export const updateOne = (req, res, next) => {
   console.log('---UPDATE USER---')
   let data = req.body;
@@ -274,8 +289,33 @@ export const updateOne = (req, res, next) => {
     }
   )
     .exec((err, user) => {
-      if (err) return next(err);
-      res.send(user);
+      if (err){
+        let error = createError(400, "Invalid ID format");
+        console.log(error);
+        return res.status(400).json(error);
+      } 
+      else{
+        res.send(user);
+      }
+    });
+}
+//Actualizar data de un usuario
+export const deleteById = (req, res, next) => {
+  console.log('---DELETE USER---')
+  User.findOneAndRemove(
+    {
+      _id: req.params.id,
+    }
+  )
+    .exec((err, user) => {
+      if (err){
+        let error = createError(400, "Invalid ID format");
+        console.log(error);
+        return res.status(400).json(error);
+      } 
+      else{
+        res.send({user, message:"user deleted"});
+      }
     });
 }
 //Activar o desactivar multiples usuarios

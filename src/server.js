@@ -125,7 +125,7 @@ app.get('/', (req, res) => {
         <p>Our API provides a wide range of functionalities to make your development process smoother and more efficient.</p>
       </div>
       <div class="cta">
-        <a href="#" class="cta-button">Get Started</a>
+        <a href="https://app.theneo.io/sos/sos-api" class="cta-button">Ver documentación</a>
       </div>
     </div>
   </body>

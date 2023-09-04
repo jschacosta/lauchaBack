@@ -26,7 +26,6 @@ function procesarNombre(nombre) {
     return [nombre];
   }
 }
-
 //Registro de usuario
 export const registerEmail = async (req, res, next) => {
     console.log('============= REGISTER NEW USER AND CREATE TOKEN   =============')

@@ -18,22 +18,30 @@ router.post(
   ),
   create
 );
-
 router.get(
-    "/allServices/:body",
+  "/get/all",
     validateParams(
       [
         {
-          param_key: "body",
-          required: true,
+          param_key: "isActive",
+          required: false,
           type: "string",
         },
+        {
+          param_key: "limit",
+          required: false,
+          type: "string", // Dependiendo de si limit es un número o no
+        },
+        {
+          param_key: "page",
+          required: false,
+          type: "string", // Dependiendo de si page es un número o no
+        },
       ],
-      "params"
+      "query"
     ),
     getServices
 );
-
 router.get(
 "/:id",
 validateParams(
@@ -48,7 +56,6 @@ validateParams(
 ),
 getById
 );
-
 router.put(
     "/:id",
     validateParams(
@@ -63,7 +70,6 @@ router.put(
     ),
     updateOne
 );
-
 router.put(
     "/active/many",
     validateParams(

@@ -4,10 +4,10 @@ import uniqueValidator from 'mongoose-unique-validator';
 import mongoosePaginate from "mongoose-paginate-v2";
 import paginateConfig from "../config/paginate.js";
 
-const subServiceSchema = new Schema(
+const subserviceSchema = new Schema(
 {
     name:{type: String},
-    service:{type:String, ref:"User"},
+    service:{type:String, ref:"Service"},
     isActive: { type: Boolean, default:true },
     icon:{type:String},
     details:{type:String},
@@ -31,9 +31,9 @@ const subServiceSchema = new Schema(
 { timestamps: true }
 );
 
-subServiceSchema.plugin(mongoosePaginate);
+subserviceSchema.plugin(mongoosePaginate);
 mongoosePaginate.paginate.options = paginateConfig;
-const SubService= mongoose.model("SubService", subServiceSchema);
-export default SubService;
+const Subservice= mongoose.model("Subservice", subserviceSchema);
+export default Subservice;
 
 

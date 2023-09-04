@@ -88,8 +88,6 @@ export const isAuthOptional = async (req, res, next) => {
     next();
   }
 };
-
-
 export const renewToken = async (req,res,next)=>{
   console.log("renew tokens",req.body)
   req.access_token = req.headers.authorization;
@@ -143,7 +141,6 @@ export const renewToken = async (req,res,next)=>{
     });
   }
 }
-
 export const isAuth = async (req, res, next) => {
   console.log("validate auth")
   req.access_token = req.headers.authorization;

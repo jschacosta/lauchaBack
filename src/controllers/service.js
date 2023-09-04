@@ -3,28 +3,30 @@ import Service from "../models/service.js";
 import mongoose from "mongoose";
 import { notFoundError, createError, missingData, duplicateData } from "../config/error.js";
 
-
-//Crear usuario
+//Crear Servicio
 export const create = async (req, res, next) => {
   console.log("---CREATE NEW SERVICE---",req.user)
   let service = new Service(req.body);
-  console.log('serrevicio',service)
-  service.name=service.name.toLowerCase()
+  service.name=req.body.name.toLowerCase()
+  service.creator = req.body.user
 
   try{
+    if(err) return err
     console.log("saving...", service)
     const newService= await service.save()
     console.log("nuevo servicio", newService)
     res.json(newService)
   }
   catch(err){
+    next(err) 
     return res.status(400).send({
         status: 400,
+        err:err,
         result: `Duplicate data ${service.name}`
       });
   }
 };
-//Obtener usuarios con paginate por tipos y activados
+//Obtener servicios con paginate por tipos y activados
 export const getServices= async (req, res, next) => {
     console.log('---GET SERVICES---')
     let body={}
@@ -32,7 +34,6 @@ export const getServices= async (req, res, next) => {
     console.log("query", body)
   
     let options = {
-      // populate,
       // select,
       page:body.page||1,
       limit:body.limit||50,
@@ -54,7 +55,7 @@ export const getServices= async (req, res, next) => {
       next(err);
     }
 };
-  //Obtener usuario por ID
+//Obtener usuario por ID
 export const getById= async (req, res, next) => {
     console.log('---GET SERVICE BY ID---')
     Service.findOne({ _id: req.params.id })

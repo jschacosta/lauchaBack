@@ -2,6 +2,7 @@ import express from "express";
 const routes = express.Router();
 import booking from "./booking.js";
 import service from "./service.js";
+import subservice from "./subservice.js";
 import user from "./user.js";
 import notification from "./notification.js";
 import schedule from "./schedule.js";
@@ -20,7 +21,8 @@ routes.use("/bookingAuth", isAuth, booking)
 routes.use("/boookingAdmin", isAuth, isAdmin, booking)
 
 routes.use("/serviceAdmin", isAuth, isAdmin, service)
-routes.use("/services", isAuth, service)
+routes.use("/services",  service)
+routes.use("/subservices",  subservice)
 
 
 routes.use("/users", user)

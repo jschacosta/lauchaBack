@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import envar from "./lib/envar.js";
+import envar from "./config/envar.js";
 
 
 const dbConfig = {

@@ -1,6 +1,6 @@
 import User from "../models/user.js";
 import  Jimp from 'jimp';
-import { AwsUploadFile } from "../lib/filesUpload.js";
+import { AwsUploadFile } from "../services/aws_s3.js";
 import fs from 'fs';
 //import foto from "../lib/casa.jpg"
 import mongoose from "mongoose";

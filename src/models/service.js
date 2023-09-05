@@ -6,7 +6,7 @@ import paginateConfig from "../config/paginate.js";
 
 const serviceSchema = new Schema(
   {
-    name:{type: String},
+    name:{type: String,unique: true},
     isActive: { type: Boolean, default:true },
     icon:{type:String},
     details:{type:String},
@@ -27,7 +27,7 @@ const serviceSchema = new Schema(
   
   { timestamps: true }
 );
-
+serviceSchema.plugin(uniqueValidator, { message: 'This {PATH} is already in use.' });
 serviceSchema.plugin(mongoosePaginate);
 mongoosePaginate.paginate.options = paginateConfig;
 const Service= mongoose.model("Service", serviceSchema);

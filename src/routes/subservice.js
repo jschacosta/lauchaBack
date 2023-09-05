@@ -13,7 +13,12 @@ router.post(
         param_key: "name",
         required: true,
         type: "string",
-      }
+      },
+      {
+        param_key: "service",
+        required: true,
+        type: "string",
+      },
     ],
     "body"
   ),

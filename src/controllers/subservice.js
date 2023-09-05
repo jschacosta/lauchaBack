@@ -7,13 +7,14 @@ import { notFoundError, createError, missingData, duplicateData } from "../confi
 export const create = async (req, res, next) => {
   console.log("---CREATE NEW SUBSERVICE---",req.body)
   let subservice = new Subservice(req.body);
-  subservice.name=subservice.name.toLowerCase()
+  subservice.name=req.body.name.toLowerCase()
   subservice.creator = req.body.user
 
   try{
     console.log("saving...", subservice)
     const newsubService= await subservice.save()
-    console.log("nuevo servicio", newsubService)
+    console.log("casa")
+    console.log("nuevo subservicio", newsubService)
     res.json(newsubService)
   }
   catch(err){
@@ -21,7 +22,7 @@ export const create = async (req, res, next) => {
     return res.status(400).send({
         status: 400,
         err:err,
-        result: `Duplicate data ${service.name}`
+        result: `Duplicate data ${subservice.name}`
       });
   }
 };

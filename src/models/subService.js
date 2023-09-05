@@ -6,7 +6,7 @@ import paginateConfig from "../config/paginate.js";
 
 const subserviceSchema = new Schema(
 {
-    name:{type: String},
+    name:{type: String,unique: true},
     service:{type:String, ref:"Service"},
     isActive: { type: Boolean, default:true },
     icon:{type:String},
@@ -30,7 +30,7 @@ const subserviceSchema = new Schema(
 },
 { timestamps: true }
 );
-
+subserviceSchema.plugin(uniqueValidator, { message: 'This {PATH} is already in use.' });
 subserviceSchema.plugin(mongoosePaginate);
 mongoosePaginate.paginate.options = paginateConfig;
 const Subservice= mongoose.model("Subservice", subserviceSchema);

@@ -7,7 +7,6 @@ import bodyParser from "body-parser";
 import localeMiddleware from "express-locale";
 import { fileURLToPath } from 'url';
 
-import envar from "./config/envar.js";
 import db from "./db.js";
 import routes from "./routes/index.js";
 

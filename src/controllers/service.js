@@ -11,7 +11,6 @@ export const create = async (req, res, next) => {
   service.creator = req.body.user
 
   try{
-    if(err) return err
     console.log("saving...", service)
     const newService= await service.save()
     console.log("nuevo servicio", newService)

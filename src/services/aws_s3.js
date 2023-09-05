@@ -1,7 +1,7 @@
 // Import required AWS SDK clients and commands for Node.js.
 import { PutObjectCommand, CreateBucketCommand,S3Client } from "@aws-sdk/client-s3";
-import { s3 } from "./sampleClient.js";
-import envar from "../lib/envar.js"
+import { s3 } from "./s3Client.js";
+import envar from "../config/envar.js"
 
 
 export const AwsUploadFile = async (file) => {

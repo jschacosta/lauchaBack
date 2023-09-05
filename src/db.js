@@ -12,7 +12,7 @@ const url = "mongodb://localhost:27017/dev"
 const env = process.env.NODE_ENV || "";
 console.log(url)
 console.log(dbConfig[env])
-
+mongoose.set('strictQuery', false)
 mongoose.connect(dbConfig[env], {
     useNewUrlParser: true,
     useUnifiedTopology: true,

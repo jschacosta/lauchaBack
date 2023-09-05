@@ -350,11 +350,9 @@ export const profilePhoto = async (req, res, next) => {
   try {
     console.log('---UPLOAD FOTO---')
     //let file = req.file
-    let file =fakeReq.file
+    let file =req.file?req.file:fakeReq.file
     //TESTING FOTOS
     //let hola = await run(fakeReq.file);
- 
-
     //Jimp.read(req.file.buffer)
     console.log(file.buffer)
     Jimp.read(file.buffer)

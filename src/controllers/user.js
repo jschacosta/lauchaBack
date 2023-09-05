@@ -1,36 +1,28 @@
 
 import User from "../models/user.js";
 import  Jimp from 'jimp';
-import { run } from "../lib/filesUpload.js";
+import { uploadFile } from "../lib/filesUpload.js";
 import fs from 'fs';
 //import foto from "../lib/casa.jpg"
 import mongoose from "mongoose";
 import { notFoundError, createError, missingData } from "../config/error.js";
-import {
-  getTokenByRefresh,
-  refreshTokenGen,
-  accessTokenGen,
-  tokenEmail,
-  decode
-} from "../config/auth.js";
+import {getTokenByRefresh,refreshTokenGen,accessTokenGen,tokenEmail,decode} from "../config/auth.js";
 
 export const test = async (req, res, next) => {
     console.log('wena wena')
     res.send('wena wena')
 };
 
-
+//TESTING IMAGENES//
 // Lee la imagen desde el sistema de archivos
-const imageBuffer = fs.readFileSync("/Users/unabase/Desktop/SOS/sosApi/src/lib/casa.jpg");
-
+const imageBuffer = fs.readFileSync("/Users/unabase/Desktop/SOS/sosApi/src/lib/perro.jpeg");
 // Convierte la imagen en base64
 const base64Image = imageBuffer.toString('base64');
-
 // Crea un objeto simulado de solicitud (req) con la imagen base64
 const fakeReq = {
   file: {
     buffer: Buffer.from(base64Image, 'base64'), // Convierte la base64 de nuevo a un buffer
-    fileName: "/profile/616d8297a636820018bdc476.jpg", // Establece un nombre de archivo de prueba
+    fileName: "casa.jpg", // Establece un nombre de archivo de prueba
   },
   // Otras propiedades de req que puedas necesitar para tu función
   body: {
@@ -357,45 +349,55 @@ export const activateMany = (req, res, next) => {
 
 export const profilePhoto = async (req, res, next) => {
   try {
-    console.log("buena", fakeReq.file)
-    fakeReq.file.fileName="profile/616d8297a636820018bdc4762.jpg"
-    let hola = await run(fakeReq.file);
-    console.log(hola)
-  //   Jimp.read(req.file.buffer)
-  // .then(async image => {
-  //   image
-  //   .resize(320, Jimp.AUTO) // resize
-  //   .quality(60) // set JPEG quality
-  //   // .write('holA.jpg');
-  //   let imagenReducida= await image.getBufferAsync(Jimp.MIME_JPEG);
-  //   console.log('imagenReducida', imagenReducida)
-  //     console.log('body',req.body)
-  //   console.log('file',req.file)
-  //   let lastIndex = req.file.originalname.lastIndexOf(".");
-  //   let name = req.file.originalname.slice(0, lastIndex);
-  //   let ext = req.file.originalname.slice(lastIndex + 1);
-  //   let resp = await upload({
-  //     filename: `profile/casita.jpg`,
-  //     buffer: imagenReducida,
-  //   });
-  //   let user = await User.findByIdAndUpdate(
-  //     req.user._id,
-  //     {
-  //       imgUrl: resp.Location,
-  //     },
-  //     {
-  //       new: true,
-  //     }
-  //   )
-  //     .select("imgUrl")
-  //     .exec();
-  //     console.log('respuesta',resp.Location)
-  //   res.send(resp.Location);
+    console.log('---UPLOAD FOTO---')
+    //let file = req.file
+    let file =fakeReq.file
+    //TESTING FOTOS
+    //let hola = await run(fakeReq.file);
+ 
 
-  // })
-  // .catch(err => {
-  //   console.error(err);
-  // });
+    //Jimp.read(req.file.buffer)
+    console.log(file.buffer)
+    Jimp.read(file.buffer)
+  .then(async image => {
+    image
+    .resize(320, Jimp.AUTO) // resize
+    .quality(70) // set JPEG quality
+    // .write('holA.jpg');
+    let imagenReducida= await image.getBufferAsync(Jimp.MIME_JPEG);
+    
+    console.log('imagenReducida', imagenReducida)
+    let lastIndex = file.fileName.lastIndexOf(".");
+    let name = file.fileName.slice(0, lastIndex);
+    let ext = file.fileName.slice(lastIndex + 1);
+    let resp = await uploadFile({
+      fileName: `profile/${req.user._id}.${ext}`,
+      buffer: imagenReducida,
+    });
+    console.log('respuesta',resp)
+    if(resp.results.$metadata.httpStatusCode==200){
+      let user = await User.findByIdAndUpdate(
+        req.user._id,
+        {
+          'img.imgUrl': resp.url,
+        },
+        {
+          new: true,
+        }
+      )
+        .select("img")
+        .exec();
+        console.log('respuesta',user)
+      res.send(user);
+    }
+    else{
+      let error = createError(400, "Create error");
+      return res.status(400).json(error);
+    }
+  })
+  .catch(err => {
+    console.error(err);
+  });
   
   } catch (err) {
     next(err);

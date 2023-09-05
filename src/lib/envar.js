@@ -12,5 +12,9 @@ export default function envar() {
         DB_DEV: process.env.DB_DEV,
         DB_TEST: process.env.DB_TEST,
         DB_PROD: process.env.DB_PROD,
+        BUCKET_NAME_FILES:process.env.BUCKET_NAME_FILES,
+        IAM_USER_KEY:process.env.IAM_USER_KEY,
+        IAM_USER_SECRET:process.env.IAM_USER_SECRET,
+        REGION:process.env.REGION
     };
 }

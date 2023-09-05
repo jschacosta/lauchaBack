@@ -1,9 +1,26 @@
 import Router from "express";
 const router = Router();
 import validateParams from "../middleware/validate.js";
+import filesConfig from "../config/files.js";
+import multer from "multer";
 
-import { create, registerEmail, loginEmail, getById, getUsers, updateOne, activateMany, getUsersByService, deleteById } from "../controllers/user.js";
+const limits = {
+  fileSize: filesConfig.profile.maxsize,
+};
 
+const fileFilter = (req, file, cb) => {
+  let formats = ["image/jpg", "image/jpeg", "image/png", "image/svg"];
+  if (!formats.includes(file.mimetype)) {
+    cb(createError(400, "Illegal file format."), false);
+  } else {
+    cb(null, true);
+  }
+};
+const upload = multer({
+  limits,
+  fileFilter,
+});
+import { create, registerEmail, loginEmail, getById, getUsers, updateOne, activateMany, getUsersByService, deleteById, profilePhoto } from "../controllers/user.js";
 router.post(
   "/",
   validateParams(
@@ -165,6 +182,9 @@ router.delete(
       "params"
   ),
   deleteById
-  );
+);
+// SUBIR ARCHIVOS (FOTOS) DE PERFIL Y PORTADA
+//router.get("/profile/photo", upload.single("photo"), profilePhoto);
+router.get("/profile/photo", profilePhoto);
 
 export default router;

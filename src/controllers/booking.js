@@ -1,4 +1,4 @@
-import { sendMailTest } from "../lib/mailer.js";
+//import { sendMailTest } from "../lib/mailer.js";
 import { notFoundError, createError, missingData } from "../config/error.js";
 import Booking from "../models/booking.js";
 

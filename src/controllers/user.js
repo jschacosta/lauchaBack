@@ -1,4 +1,3 @@
-
 import User from "../models/user.js";
 import  Jimp from 'jimp';
 import { AwsUploadFile } from "../lib/filesUpload.js";
@@ -15,7 +14,7 @@ export const test = async (req, res, next) => {
 
 //TESTING IMAGENES//
 // Lee la imagen desde el sistema de archivos
-const imageBuffer = fs.readFileSync("/Users/unabase/Desktop/SOS/sosApi/src/lib/casa.jpeg");
+const imageBuffer = fs.readFileSync("/Users/unabase/Desktop/SOS/sosApi/src/lib/casa.jpg");
 // Convierte la imagen en base64
 const base64Image = imageBuffer.toString('base64');
 // Crea un objeto simulado de solicitud (req) con la imagen base64

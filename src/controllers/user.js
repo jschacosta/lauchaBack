@@ -1,7 +1,7 @@
 
 import User from "../models/user.js";
 import  Jimp from 'jimp';
-import { uploadFile } from "../lib/filesUpload.js";
+import { AwsUploadFile } from "../lib/filesUpload.js";
 import fs from 'fs';
 //import foto from "../lib/casa.jpg"
 import mongoose from "mongoose";
@@ -15,7 +15,7 @@ export const test = async (req, res, next) => {
 
 //TESTING IMAGENES//
 // Lee la imagen desde el sistema de archivos
-const imageBuffer = fs.readFileSync("/Users/unabase/Desktop/SOS/sosApi/src/lib/perro.jpeg");
+const imageBuffer = fs.readFileSync("/Users/unabase/Desktop/SOS/sosApi/src/lib/casa.jpeg");
 // Convierte la imagen en base64
 const base64Image = imageBuffer.toString('base64');
 // Crea un objeto simulado de solicitud (req) con la imagen base64
@@ -370,7 +370,7 @@ export const profilePhoto = async (req, res, next) => {
     let lastIndex = file.fileName.lastIndexOf(".");
     let name = file.fileName.slice(0, lastIndex);
     let ext = file.fileName.slice(lastIndex + 1);
-    let resp = await uploadFile({
+    let resp = await AwsUploadFile({
       fileName: `profile/${req.user._id}.${ext}`,
       buffer: imagenReducida,
     });

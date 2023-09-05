@@ -4,7 +4,7 @@ import { s3 } from "./sampleClient.js";
 import envar from "../lib/envar.js"
 
 
-export const uploadFile = async (file) => {
+export const AwsUploadFile = async (file) => {
   // Create an object and upload it to the Amazon S3 bucket.
   try {
     console.log("--upload bucket--")

@@ -14,20 +14,25 @@ export const test = async (req, res, next) => {
 
 //TESTING IMAGENES//
 // Lee la imagen desde el sistema de archivos
-const imageBuffer = fs.readFileSync("/Users/unabase/Desktop/SOS/sosApi/src/lib/casa.jpg");
-// Convierte la imagen en base64
-const base64Image = imageBuffer.toString('base64');
-// Crea un objeto simulado de solicitud (req) con la imagen base64
-const fakeReq = {
-  file: {
-    buffer: Buffer.from(base64Image, 'base64'), // Convierte la base64 de nuevo a un buffer
-    fileName: "casa.jpg", // Establece un nombre de archivo de prueba
-  },
-  // Otras propiedades de req que puedas necesitar para tu función
-  body: {
-    // ...
-  },
-};
+// import  path from 'path'
+// const currentFileURL = import.meta.url;
+// const currentDir = path.dirname(currentFileURL);
+// const imagePath = path.join(currentDir, '../lib/casa.jpg');
+// const imageBuffer = fs.readFileSync(imagePath);
+
+// // Convierte la imagen en base64
+// const base64Image = imageBuffer.toString('base64');
+// // Crea un objeto simulado de solicitud (req) con la imagen base64
+// const fakeReq = {
+//   file: {
+//     buffer: Buffer.from(base64Image, 'base64'), // Convierte la base64 de nuevo a un buffer
+//     fileName: "casa.jpg", // Establece un nombre de archivo de prueba
+//   },
+//   // Otras propiedades de req que puedas necesitar para tu función
+//   body: {
+//     // ...
+//   },
+// };
 
 function procesarNombre(nombre) {
   const partes = nombre.split(' ');  // Dividir el string en partes utilizando el espacio como separador

@@ -2,7 +2,7 @@ import express, { Router }  from 'express';
 import morgan from 'morgan'
 import cors from 'cors'
 import history from 'connect-history-api-fallback'
-import  path from "path";
+import * as path from "path";
 import bodyParser from "body-parser";
 import localeMiddleware from "express-locale";
 import { fileURLToPath } from 'url';

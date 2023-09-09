@@ -2,14 +2,8 @@
 import { notFoundError, createError, missingData } from "../config/error.js";
 import Booking from "../models/booking.js";
 
-export const test = async (req, res, next) => {
-  console.log("wena wena");
-  sendMailTest();
 
-  res.send("wena wena");
-};
-
-//Crear usuario
+//Crear booking
 export const create = async (req, res, next) => {
   console.log("---CREATE NEW BOOKING---");
   let booking = new Booking(req.body);

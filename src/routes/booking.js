@@ -1,11 +1,8 @@
 import  Router  from "express";
-import {
-    create,test, getById, getBookings, updateOne
-} from "../controllers/booking.js";
+import {create,getById, getBookings, updateOne} from "../controllers/booking.js";
 import  validateParams  from "../middleware/validate.js";
 
 const router = Router();
-router.post("/test", test);
 
 router.post(
     "/",

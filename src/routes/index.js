@@ -3,6 +3,7 @@ const routes = express.Router();
 import booking from "./booking.js";
 import service from "./service.js";
 import subservice from "./subservice.js";
+import test from "./test.js";
 import user from "./user.js";
 import notification from "./notification.js";
 import schedule from "./schedule.js";
@@ -32,6 +33,8 @@ routes.use("/usersAdmin", isAuth, isAdmin, user)
 routes.use("/notification", notification)
 
 routes.use("/schedules", schedule)
+
+routes.use("/tests", test)
 
 
 export default routes;

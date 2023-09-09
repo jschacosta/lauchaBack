@@ -18,6 +18,7 @@ export default function envar() {
       BUCKET_NAME_FILES:process.env.BUCKET_NAME_FILES,
       IAM_USER_KEY:process.env.IAM_USER_KEY,
       IAM_USER_SECRET:process.env.IAM_USER_SECRET,
-      REGION:process.env.REGION
+      REGION:process.env.REGION,
+      SES_EMAIL_AUTH:process.env.SES_EMAIL_AUTH
   };
 }

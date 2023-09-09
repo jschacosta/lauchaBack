@@ -185,7 +185,7 @@ router.delete(
 );
 // SUBIR ARCHIVOS FOTO DE PERFIL 
 router.post("/profile/photo", upload.single("file"), profilePhoto);
-// SUBIR ARCHIVOS FOTO DE PERFIL 
+// SUBIR ARCHIVOS FOTOS DE GALERIA
 router.post("/profile/gallery/:number",
 validateParams(
   [

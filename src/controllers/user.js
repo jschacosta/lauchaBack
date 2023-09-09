@@ -406,11 +406,8 @@ export const galleryPhoto = async (req, res, next) => {
     console.log("params",req.params.number)
     console.log('gato',req.file)
     let paramsNumber = Number(req.params.number)
-    console.log(paramsNumber==NaN)
-    console.log(!paramsNumber)
-    console.log(paramsNumber>=7)
+    //VALIDACION PARA SOLO SUBIR UN MAXIMO DE 6 FOTOS
     if(!paramsNumber||paramsNumber>=7 || paramsNumber==NaN){
-      console.log("entro")
       paramsNumber=1
     }
     let file =req.file?req.file:fakeReq.file

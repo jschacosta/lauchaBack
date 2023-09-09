@@ -7,7 +7,6 @@ import multer from "multer";
 const limits = {
   fileSize: filesConfig.profile.maxsize,
 };
-
 const fileFilter = (req, file, cb) => {
   let formats = ["image/jpg", "image/jpeg", "image/png", "image/svg"];
   if (!formats.includes(file.mimetype)) {
@@ -16,11 +15,12 @@ const fileFilter = (req, file, cb) => {
     cb(null, true);
   }
 };
+
 const upload = multer({
   limits,
   fileFilter,
 });
-import { create, registerEmail, loginEmail, getById, getUsers, updateOne, activateMany, getUsersByService, deleteById, profilePhoto } from "../controllers/user.js";
+import { create, registerEmail, loginEmail, getById, getUsers, updateOne, activateMany, getUsersByService, deleteById, profilePhoto, galleryPhoto } from "../controllers/user.js";
 router.post(
   "/",
   validateParams(
@@ -183,8 +183,20 @@ router.delete(
   ),
   deleteById
 );
-// SUBIR ARCHIVOS (FOTOS) DE PERFIL Y PORTADA
-//router.get("/profile/photo", upload.single("photo"), profilePhoto);
-router.get("/profile/photo", profilePhoto);
-
+// SUBIR ARCHIVOS FOTO DE PERFIL 
+router.post("/profile/photo", upload.single("file"), profilePhoto);
+// SUBIR ARCHIVOS FOTO DE PERFIL 
+router.post("/profile/gallery/:number",
+validateParams(
+  [
+    {
+      param_key: "number",
+      required: true,
+      type: "string",
+    },
+  ],
+  "params"
+),
+upload.single("file"), 
+galleryPhoto);
 export default router;

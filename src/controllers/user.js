@@ -2,7 +2,6 @@ import User from "../models/user.js";
 import  Jimp from 'jimp';
 import { AwsUploadFile } from "../services/aws_s3.js";
 import fs from 'fs';
-//import foto from "../lib/casa.jpg"
 import mongoose from "mongoose";
 import { notFoundError, createError, missingData } from "../config/error.js";
 import {getTokenByRefresh,refreshTokenGen,accessTokenGen,tokenEmail,decode} from "../config/auth.js";
@@ -12,27 +11,30 @@ export const test = async (req, res, next) => {
     res.send('wena wena')
 };
 
-//TESTING IMAGENES//
+// TESTING IMAGENES//
 // Lee la imagen desde el sistema de archivos
-// import  path from 'path'
-// const currentFileURL = import.meta.url;
-// const currentDir = path.dirname(currentFileURL);
-// const imagePath = path.join(currentDir, '../lib/casa.jpg');
-// const imageBuffer = fs.readFileSync(imagePath);
+import  path from 'path'
+const currentFileURL = import.meta.url;
+const currentDir = path.dirname(currentFileURL);
+const imagePath = path.join(currentDir, '../lib/casa.jpeg');
+const split = imagePath.split(":")
+const imageBuffer = fs.readFileSync(split[1]);
 
-// // Convierte la imagen en base64
-// const base64Image = imageBuffer.toString('base64');
-// // Crea un objeto simulado de solicitud (req) con la imagen base64
-// const fakeReq = {
-//   file: {
-//     buffer: Buffer.from(base64Image, 'base64'), // Convierte la base64 de nuevo a un buffer
-//     fileName: "casa.jpg", // Establece un nombre de archivo de prueba
-//   },
-//   // Otras propiedades de req que puedas necesitar para tu función
-//   body: {
-//     // ...
-//   },
-// };
+// Convierte la imagen en base64
+const base64Image = imageBuffer.toString('base64');
+// Crea un objeto simulado de solicitud (req) con la imagen base64
+const fakeReq = {
+  file: {
+    buffer: Buffer.from(base64Image, 'base64'), // Convierte la base64 de nuevo a un buffer
+    originalname: "sostravel.jpg", // Establece un nombre de archivo de prueba
+  },
+  // Otras propiedades de req que puedas necesitar para tu función
+  body: {
+    // ...
+  },
+};
+
+
 
 function procesarNombre(nombre) {
   const partes = nombre.split(' ');  // Dividir el string en partes utilizando el espacio como separador
@@ -350,33 +352,81 @@ export const activateMany = (req, res, next) => {
   });
   // res.send("buena")
 };
-
 export const profilePhoto = async (req, res, next) => {
   try {
-    console.log('---UPLOAD FOTO---')
-    //let file = req.file
+    console.log('---UPLOAD PROFILE FOTO---')
+    console.log('gato',req.file)
     let file =req.file?req.file:fakeReq.file
-    //TESTING FOTOS
-    //let hola = await run(fakeReq.file);
-    //Jimp.read(req.file.buffer)
-    console.log(file.buffer)
     Jimp.read(file.buffer)
   .then(async image => {
     image
     .resize(320, Jimp.AUTO) // resize
     .quality(70) // set JPEG quality
-    // .write('holA.jpg');
-    let imagenReducida= await image.getBufferAsync(Jimp.MIME_JPEG);
-    
+    let imagenReducida= await image.getBufferAsync(Jimp.MIME_JPEG); 
     console.log('imagenReducida', imagenReducida)
-    let lastIndex = file.fileName.lastIndexOf(".");
-    let name = file.fileName.slice(0, lastIndex);
-    let ext = file.fileName.slice(lastIndex + 1);
+    let lastIndex = file.originalname.lastIndexOf(".");
+    let name = file.originalname.slice(0, lastIndex);
+    let ext = file.originalname.slice(lastIndex + 1);
     let resp = await AwsUploadFile({
-      fileName: `profile/${req.user._id}.${ext}`,
+      fileName:  `users/${req.user._id}/profile/${req.user._id}.${ext}`,
       buffer: imagenReducida,
     });
     console.log('respuesta',resp)
+    if(resp.results.$metadata.httpStatusCode==200){
+      let user = await User.findByIdAndUpdate(
+        req.user._id,
+        {
+          'img.imgUrl': resp.url,
+        },
+        {
+          new: true,
+        }
+      )
+        .select("img")
+        .exec();
+        console.log('respuesta',user)
+      res.send(user);
+    }
+    else{
+      let error = createError(400, "Create error");
+      return res.status(400).json(error);
+    }
+  })
+  .catch(err => {
+    console.error(err);
+  });
+  
+  } catch (err) {
+    next(err);
+  }
+};
+export const galleryPhoto = async (req, res, next) => {
+  try {
+    console.log('---UPLOAD GALLERY FOTO---')
+    console.log("params",req.params.number)
+    console.log('gato',req.file)
+    let paramsNumber = Number(req.params.number)
+    console.log(paramsNumber==NaN)
+    console.log(!paramsNumber)
+    console.log(paramsNumber>=7)
+    if(!paramsNumber||paramsNumber>=7 || paramsNumber==NaN){
+      console.log("entro")
+      paramsNumber=1
+    }
+    let file =req.file?req.file:fakeReq.file
+    Jimp.read(file.buffer)
+  .then(async image => {
+    image
+    .resize(320, Jimp.AUTO) // resize
+    .quality(70) // set JPEG quality
+    let imagenReducida= await image.getBufferAsync(Jimp.MIME_JPEG); 
+    let lastIndex = file.originalname.lastIndexOf(".");
+    let name = file.originalname.slice(0, lastIndex);
+    let ext = file.originalname.slice(lastIndex + 1);
+    let resp = await AwsUploadFile({
+      fileName: `users/${req.user._id}/gallery/photo${paramsNumber}.${ext}`,
+      buffer: imagenReducida,
+    });
     if(resp.results.$metadata.httpStatusCode==200){
       let user = await User.findByIdAndUpdate(
         req.user._id,

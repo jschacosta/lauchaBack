@@ -1,16 +1,12 @@
+import  path from 'path'
 import { SendEmailCommand,CreateTemplateCommand,SendTemplatedEmailCommand,DeleteTemplateCommand, UpdateTemplateCommand  } from "@aws-sdk/client-ses"
 import { SES } from "./awsClient.js";
 import envar from "../config/envar.js";
 import fs from 'fs';
-import  path from 'path'
+import staticDir from '../config/staticPath.js';
 
-const currentFileURL = import.meta.url;
-const currentDir = path.dirname(currentFileURL);
-const imagePath = path.join(currentDir, '../lib/other/emailPrueba.html');
-const split = imagePath.split(":")
-const templateHtml = fs.readFileSync(split[1], "utf8");
-
-
+const filePath = path.join(staticDir, 'emailPrueba.html');
+const templateHtml = fs.readFileSync(filePath, "utf8");
 
 // Definir los parámetros del correo electrónico
 const params = {
@@ -108,12 +104,11 @@ export const sendTemplate = async (file) => {
     console.log("entrando4")
     // Create an object and upload it to the Amazon S3 bucket.
     try {
-
         // Definir los parámetros del correo electrónico usando el template
         const emailParams = {
             Source: envar().SES_EMAIL_AUTH, // Dirección de correo verificada con AWS
             Destination: {
-                ToAddresses: ['jschacosta@gmail.com'], // Lista de destinatarios
+                ToAddresses: ['jschacosta@gmail.com', 'methalcon@gmail.com'], // Lista de destinatarios
                 CcAddresses: [envar().SES_EMAIL_AUTH], // Lista de copias
             },
             Template: "MiTemplateHTML", // Nombre del template a usar

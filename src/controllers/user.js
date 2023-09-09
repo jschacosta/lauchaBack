@@ -5,15 +5,11 @@ import fs from 'fs';
 import  path from 'path'
 import { notFoundError, createError, missingData } from "../config/error.js";
 import {getTokenByRefresh,refreshTokenGen,accessTokenGen,tokenEmail,decode} from "../config/auth.js";
-
+import staticDir from '../config/staticPath.js';
 
 // TESTING IMAGENES//
-// Lee la imagen desde el sistema de archivos
-const currentFileURL = import.meta.url;
-const currentDir = path.dirname(currentFileURL);
-const imagePath = path.join(currentDir, '../lib/casa.jpeg');
-const split = imagePath.split(":")
-const imageBuffer = fs.readFileSync(split[1]);
+const imagePath = path.join(staticDir, 'img', 'casa.jpeg');
+const imageBuffer = fs.readFileSync(imagePath);
 // Convierte la imagen en base64
 const base64Image = imageBuffer.toString('base64');
 // Crea un objeto simulado de solicitud (req) con la imagen base64

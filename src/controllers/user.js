@@ -2,24 +2,18 @@ import User from "../models/user.js";
 import  Jimp from 'jimp';
 import { AwsUploadFile } from "../services/aws_s3.js";
 import fs from 'fs';
-import mongoose from "mongoose";
+import  path from 'path'
 import { notFoundError, createError, missingData } from "../config/error.js";
 import {getTokenByRefresh,refreshTokenGen,accessTokenGen,tokenEmail,decode} from "../config/auth.js";
 
-export const test = async (req, res, next) => {
-    console.log('wena wena')
-    res.send('wena wena')
-};
 
 // TESTING IMAGENES//
 // Lee la imagen desde el sistema de archivos
-import  path from 'path'
 const currentFileURL = import.meta.url;
 const currentDir = path.dirname(currentFileURL);
 const imagePath = path.join(currentDir, '../lib/casa.jpeg');
 const split = imagePath.split(":")
 const imageBuffer = fs.readFileSync(split[1]);
-
 // Convierte la imagen en base64
 const base64Image = imageBuffer.toString('base64');
 // Crea un objeto simulado de solicitud (req) con la imagen base64

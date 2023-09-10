@@ -1,4 +1,4 @@
-import { createOrderPaypal } from "../services/paypal.js";
+import { captureOrder, createOrderPaypal } from "../services/paypal.js";
 
 
 export const createOrder = async (req, res, next) => {
@@ -10,3 +10,10 @@ export const createOrder = async (req, res, next) => {
     res.send(response.data);
 }
 
+export const aprovedOrder = async (req, res, next) => {
+    console.log("--APROVED ORDER--")
+    let data = req.body
+    let response =await captureOrder(data);
+    console.log("logrado", response.data)
+    res.send(response.data);
+}

@@ -5,7 +5,6 @@ import history from 'connect-history-api-fallback'
 import staticDir from './config/staticPath.js';
 import bodyParser from "body-parser";
 import localeMiddleware from "express-locale";
-
 import db from "./db.js";
 import routes from "./routes/index.js";
 
@@ -18,15 +17,14 @@ db.on("error", (err) => {
 });
 
 const app = express();
-//ruta relativa para archivos
+const router = Router();
 app.use(express.static(staticDir));
+
 //Nos sirve para pintar las peticiones HTTP request que se solicitan a nuestro aplicación.
 app.use(morgan('tiny'));
 //Para realizar solicitudes de un servidor externo e impedir el bloqueo por CORS
 app.use(cors());
 app.options("*", cors());
-
-
 
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
@@ -40,10 +38,6 @@ app.use(localeMiddleware());
 
 app.use(bodyParser.json());
 // app.use(bodyParser.urlencoded({extended: true}));
-
-// Middleware para Vue.js router modo history
-app.use(history());
-//app.use(express.static(path.join(__dirname, 'public')));
 
 app.use("/", routes);
 app.get('/', (req, res) => {
@@ -125,5 +119,10 @@ app.get('/', (req, res) => {
   `;
   res.send(htmlResponse);
 });
+// Middleware para Vue.js router modo history
+app.use(history());
+//app.use(express.static(path.join(__dirname, 'public')));
+
+
 
 export default app;1

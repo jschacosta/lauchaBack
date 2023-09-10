@@ -4,6 +4,7 @@ import booking from "./booking.js";
 import service from "./service.js";
 import subservice from "./subservice.js";
 import test from "./test.js";
+import payment from "./payment.js"
 import user from "./user.js";
 import notification from "./notification.js";
 import schedule from "./schedule.js";
@@ -35,6 +36,8 @@ routes.use("/notification", notification)
 routes.use("/schedules", schedule)
 
 routes.use("/tests", test)
+
+routes.use("/payments", payment)
 
 
 export default routes;

@@ -1,4 +1,4 @@
-import  path from 'path'
+import path from 'path'
 import { SendEmailCommand,CreateTemplateCommand,SendTemplatedEmailCommand,DeleteTemplateCommand, UpdateTemplateCommand  } from "@aws-sdk/client-ses"
 import { SES } from "./awsClient.js";
 import envar from "../config/envar.js";

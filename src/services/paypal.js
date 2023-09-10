@@ -30,9 +30,8 @@ export const generateAccessToken = async () => {
     }
 };
 
-export const createOrderPaypal = async (req, res) => {
-    console.log("--create order paypal--",req.body)
-    let data = req.body;
+export const createOrderPaypal = async (data) => {
+    console.log("--create order paypal--", data)
     // use the cart information passed from the front-end to calculate the purchase unit details
     // console.log(
     //     "shopping cart information passed from the frontend createOrder() callback:",

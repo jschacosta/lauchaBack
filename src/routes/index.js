@@ -5,6 +5,7 @@ import user from "./user.js";
 import player from "./player.js";
 import torneo from "./torneo.js";
 import rules from "./rule.js";
+import teams from "./team.js";
 
 import { isAuth, isAdmin, isAuthOptional, renewToken } from "../config/auth.js";
 
@@ -21,6 +22,6 @@ routes.use("/api/players", player);
 routes.use("/torneos", torneo);
 routes.use("/rules", rules);
 
-//routes.use("/api/teams", isAuth, booking)
+routes.use("/teams", teams);
 
 export default routes;

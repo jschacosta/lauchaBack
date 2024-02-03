@@ -57,6 +57,7 @@ export const signin = async (req, res) => {
       .status(200)
       .json({ mensaje: "Acceso Correcto", usuarioDB, token });
   } catch (error) {
+    next(error);
     return res.status(500).json({ mensaje: "Ocurrió un error al ingresar" });
   }
 };

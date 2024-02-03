@@ -14,6 +14,7 @@ export const create = async (req, res, next) => {
     const partidoDB = await Match.create(body); //create verbo de mongo
     res.status(200).json(partidoDB);
   } catch (error) {
+    next(error);
     return res.status(500).json({
       mensaje: "Ocurrio un error",
       error,
@@ -26,6 +27,7 @@ export const getAllMatches = async (req, res, next) => {
     const partidosDb = await Match.find();
     res.json(partidosDb);
   } catch (error) {
+    next(error);
     return res.status(400).json({
       mensaje: "Ocurrio un error",
       error,
@@ -68,6 +70,7 @@ export const getByState = async (req, res, next) => {
       res.json(partidosDb);
     }
   } catch (error) {
+    next(error);
     return res.status(400).json({
       mensaje: "Ocurrio un error",
       error,
@@ -87,6 +90,7 @@ export const deleteMatch = async (req, res, next) => {
     }
     res.json(partidoDb);
   } catch (error) {
+    next(error);
     return res.status(500).json({
       mensaje: "Ocurrio un error",
       error,
@@ -101,6 +105,7 @@ export const updateMatch = async (req, res, next) => {
     const matchDB = await Match.findByIdAndUpdate(_id, body, { new: true });
     res.status(200).json(matchDB);
   } catch (error) {
+    next(error);
     return res
       .status(400)
       .json({ mensaje: "Ocurrió un error al actualizar", error });
@@ -120,6 +125,7 @@ export const updateMany = async (req, res, next) => {
     }
     res.status(200).json(arreglo);
   } catch (error) {
+    next(error);
     return res.status(400).json({ mensaje: "Ocurrió un error al actualizar" });
   }
 };

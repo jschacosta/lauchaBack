@@ -8,11 +8,11 @@ const dbConfig = {
   production: `mongodb+srv://${envar().DB_USER}:${envar().DB_PASS}@${envar().DB_PROD}`,
 };
 
-const url = "mongodb://localhost:27017/dev"
+const url = "mongodb+srv://coloro:Pepekika@pollagol.5pmli.mongodb.net/pollagol?retryWrites=true&w=majority"
 const env = process.env.NODE_ENV || "";
-console.log(dbConfig[env])
+console.log(url)
 mongoose.set('strictQuery', false)
-mongoose.connect(dbConfig[env], {
+mongoose.connect(url, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     // useFindAndModify: false,

@@ -1,202 +1,29 @@
-import Router from "express";
-const router = Router();
-import validateParams from "../middleware/validate.js";
-import filesConfig from "../config/files.js";
-import multer from "multer";
+//Importacion Express router
+import express from 'express';
+const router = express.Router();
+//Autentificación de roles por JWT
+import {verificarAuth,verificarAdmin} from'../middleware/auth.js'
+//controllers de usuarios
+import {signup, signin, forgotPassword, resetPassword} from'../controllers/user-login.js'
+import {editInfo,editTorneo,editPass,deleteUser,deleteUserTorneo} from '../controllers/user-edit.js'
+import {allUsers,findUser,newUser,newRole,borrarUser} from'../controllers/user-admin.js'
+///////////// RUTAS DE USUARIOS /////////////
+//Opciones de Login
+router.post('/sign-up', signup); 
+router.post('/sign-in', signin);    
+router.put('/forgot-password', forgotPassword);
+router.put('/reset-password/:token', resetPassword);
+//Opciones de Usuario
+router.put('/user/:id', [ verificarAuth , editInfo ]);  
+router.put('/user-torneo', editTorneo);  
+router.put('/delete-user-torneo/:id', deleteUserTorneo);  
+router.put('/user-pass/:id', [ verificarAuth , editPass ]);
+router.delete('/user/:id', [ verificarAuth , deleteUser ]);
+//Opciones de Admin
+router.get('/admin/users', [ verificarAuth , verificarAdmin,allUsers]);
+router.get('/admin/user', [ verificarAuth , verificarAdmin, findUser]);
+router.put('/admin/user/:id', [ verificarAuth , verificarAdmin, newRole]);
+router.post('/admin/user', [ verificarAuth , verificarAdmin,newUser]);
+router.delete('/admin/user/:id', [ verificarAuth , verificarAdmin, borrarUser]);
 
-const limits = {
-  fileSize: filesConfig.profile.maxsize,
-};
-const fileFilter = (req, file, cb) => {
-  let formats = ["image/jpg", "image/jpeg", "image/png", "image/svg"];
-  if (!formats.includes(file.mimetype)) {
-    cb(createError(400, "Illegal file format."), false);
-  } else {
-    cb(null, true);
-  }
-};
-
-const upload = multer({
-  limits,
-  fileFilter,
-});
-import { create, registerEmail, loginEmail, getById, getUsers, updateOne, activateMany, getUsersByService, deleteById, profilePhoto, galleryPhoto } from "../controllers/user.js";
-router.post(
-  "/",
-  validateParams(
-    [
-      {
-        param_key: "name",
-        required: true,
-        type: "object",
-      },
-      {
-        param_key: "password",
-        required: true,
-        type: "string",
-      },
-    ],
-    "body"
-  ),
-  create
-);
-
-router.post(
-  "/register",
-  validateParams(
-    [
-      {
-        param_key: "name",
-        required: true,
-        type: "string",
-      },
-      {
-        param_key: "email",
-        required: true,
-        type: "string",
-      },
-      {
-        param_key: "password",
-        required: true,
-        type: "string",
-      },
-    ],
-    "body"
-  ),
-  registerEmail
-);
-router.post(
-  "/loginEmail",
-  validateParams(
-    [
-      {
-        param_key: "email",
-        required: true,
-        type: "string",
-      },
-      {
-        param_key: "password",
-        required: true,
-        type: "string",
-      },
-    ],
-    "body"
-  ),
-  loginEmail
-);
-
-router.get(
-    "/all",
-    // validateParams(
-    //   [
-    //     {
-    //       param_key: "body",
-    //       required: true,
-    //       type: "object",
-    //     },
-    //   ],
-    //   "query"
-    // ),
-    getUsers
-);
-
-router.get(
-  "/findService/:bodyParams",
-  validateParams(
-    [
-      {
-        param_key: "bodyParams",
-        required: true,
-        type: "string",
-      },
-    ],
-    "query"
-  ),
-  getUsersByService
-);
-
-router.get(
-"/:id",
-validateParams(
-    [
-    {
-        param_key: "id",
-        required: true,
-        type: "string",
-    },
-    ],
-    "params"
-),
-getById
-);
-
-router.put(
-    "/:id",
-    validateParams(
-      [
-        {
-          param_key: "id",
-          required: true,
-          type: "string",
-        },
-      ],
-      "params"
-    ),
-    validateParams(
-      [
-        {
-          param_key: "name",
-          required: false,
-          type: "object",
-        },
-      ],
-      "body"
-    ),
-    updateOne
-);
-
-router.put(
-    "/active/many",
-    validateParams(
-      [
-        {
-          param_key: "users",
-          required: true,
-          type: "array",
-        },
-      ],
-      "body"
-    ),
-    activateMany
-);
-router.delete(
-  "/:id",
-  validateParams(
-      [
-      {
-          param_key: "id",
-          required: true,
-          type: "string",
-      },
-      ],
-      "params"
-  ),
-  deleteById
-);
-// SUBIR ARCHIVOS FOTO DE PERFIL 
-router.post("/profile/photo", upload.single("file"), profilePhoto);
-// SUBIR ARCHIVOS FOTOS DE GALERIA
-router.post("/profile/gallery/:number",
-validateParams(
-  [
-    {
-      param_key: "number",
-      required: true,
-      type: "string",
-    },
-  ],
-  "params"
-),
-upload.single("file"), 
-galleryPhoto);
-export default router;
+export default router;           

@@ -1,43 +1,26 @@
 import express from "express";
 const routes = express.Router();
-import booking from "./booking.js";
-import service from "./service.js";
-import subservice from "./subservice.js";
-import test from "./test.js";
-import payment from "./payment.js"
+import match from "./match.js";
 import user from "./user.js";
-import notification from "./notification.js";
-import schedule from "./schedule.js";
+import player from "./player.js";
+import torneo from "./torneo.js";
+import rules from "./rule.js";
+
 import { isAuth, isAdmin, isAuthOptional, renewToken } from "../config/auth.js";
 
-
 routes.get("/isAuth", isAuth, (req, res) => {
-    res.statusMessage = "authenticated";
-    res.send(req.user.getUser());
+  res.statusMessage = "authenticated";
+  res.send(req.user.getUser());
 });
 
-routes.post("/renew",renewToken);
+routes.post("/renew", renewToken);
 
-routes.use("/booking", booking)
-routes.use("/bookingAuth", isAuth, booking)
-routes.use("/boookingAdmin", isAuth, isAdmin, booking)
+routes.use("/matches", match);
+routes.use("/users", user);
+routes.use("/api/players", player);
+routes.use("/torneos", torneo);
+routes.use("/rules", rules);
 
-routes.use("/serviceAdmin", isAuth, isAdmin, service)
-routes.use("/services",  service)
-routes.use("/subservices",  subservice)
-
-
-routes.use("/users", user)
-routes.use("/usersAuth", isAuth, user)
-routes.use("/usersAdmin", isAuth, isAdmin, user)
-
-routes.use("/notification", notification)
-
-routes.use("/schedules", schedule)
-
-routes.use("/tests", test)
-
-routes.use("/payments", payment)
-
+//routes.use("/api/teams", isAuth, booking)
 
 export default routes;

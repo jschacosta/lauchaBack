@@ -1,4 +1,4 @@
-# Laucha Api
+# LAUCHA APP
 
 ## Project setup
 
